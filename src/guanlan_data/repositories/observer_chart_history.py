@@ -3,6 +3,7 @@ import math
 from guanlan_data.repositories.industry_index.inputs import readonly,digest
 from guanlan_data.repositories.observer_calendar import load
 from guanlan_domain.observer_math import chart_rows
+from guanlan_domain.observer_math.indicators import weekly_line,apply_overlays,align_weeks
 from guanlan_domain.observer_math.signals import price_strength
 from guanlan_domain.observer_math.chart_metrics import enrich
 
@@ -29,5 +30,11 @@ def stock_history(market,code,end,period='daily',mode='adjusted'):
             observed[day]={'trade_date':day,**dict.fromkeys(('open','high','low','close','volume','amount')),'status':'missing','calendar_gap':True}
             events.append({'trade_date':day,'kind':'missing','label':'无日线，未推断停牌'})
     history=[observed[d] for d in sorted(observed)]
-    points=enrich(chart_rows(history,period,calendar),'weekly' if period=='weekly' else 'daily',calendar)
-    return {'bars':points,'rows':rows,'events':events,'calendar':calendar,'signal':price_strength(history,calendar),'revision':digest([rows,calendar.revision,mode]),'start':rows[0]['trade_date']}
+    # Missing-price placeholders belong to the daily display, not the weekly
+    # aggregator: counting them as observed sessions would manufacture low=0.
+    valid_history=[r for r in history if r.get('status')!='missing']
+    weekly,line=weekly_line(valid_history,calendar)
+    weekly=align_weeks(weekly,calendar,start=history[0]['trade_date'],end=end)
+    computed=apply_overlays(weekly if period=='weekly' else history,line)
+    points=enrich(computed,period,calendar)
+    return {'bars':points,'rows':rows,'events':events,'calendar':calendar,'signal':price_strength(valid_history,calendar),'revision':digest([rows,calendar.revision,mode]),'start':rows[0]['trade_date']}

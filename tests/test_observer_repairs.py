@@ -24,6 +24,7 @@ def test_complete_history_cutoff_and_missing_factor_are_read_only(tmp_path):
     assert next(r for r in raw['bars'] if r['trade_date']=='2023-01-03')['close'] is not None
     w=stock_history(market,'600001.SH','2026-08-31','weekly','adjusted')
     assert len(w['bars'])>150 and w['bars'][-1]['trade_date']<='2026-08-31'
+    assert w['bars'][0]['close'] is None  # A missing factor cannot become a zero-price weekly candle.
     assert hashlib.sha256(market.read_bytes()).hexdigest()==before
 
 def test_moved_database_uses_explicit_frozen_reference_and_checks_hash(tmp_path):
