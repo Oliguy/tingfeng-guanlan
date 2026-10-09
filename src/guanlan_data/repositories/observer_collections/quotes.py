@@ -1,4 +1,6 @@
 """Bounded read-only quote references. No collectors, network or persistent price cache."""
+from guanlan_data.config import source_path
+from guanlan_data.layout import same_source_stamp
 import hashlib
 import json
 import math
@@ -20,7 +22,7 @@ class _ReadScope:
 
     def calendar_snapshot(self,ref):
         from guanlan_data.repositories.observer_calendar import load as load_calendar; from guanlan_data.repositories.observer_calendar import source_stamp
-        path=ref['market_path'];stamp=source_stamp(path)
+        path=source_path(ref['market_path']);stamp=source_stamp(path)
         cached=self.calendar_snapshots.get(path)
         if cached and cached[0]!=stamp:raise ValueError('读取期间日历来源发生变化，请重试')
         if not cached:
@@ -29,7 +31,7 @@ class _ReadScope:
         return cached[1]
 
     def connection(self,path):
-        path=str(Path(path).resolve())
+        path=str(source_path(path))
         stamp=tuple((p.stat().st_mtime_ns,p.stat().st_size) if p.is_file() else None
                     for p in (Path(path),Path(path+'-wal')))
         if path in self.stamps and stamp!=self.stamps[path]:

@@ -3,6 +3,7 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from .layout import resolve_data_path, load_layout, resolve_registered_path
 
 @dataclass(frozen=True)
 class Configuration:
@@ -17,7 +18,11 @@ class Configuration:
 
     @property
     def protected(self):
-        return [self.paths[k] for k in ('market_root','business_db','support_db','calendar_root','analysis_root')]
+        return ([self.paths[k] for k in ('market_root','business_db','support_db','calendar_root','analysis_root')]
+                +[resolve_data_path(self.path('storage_root'),'market_etf/industry_etf_observer.sqlite'),
+                  resolve_data_path(self.path('storage_root'),'stable_basis'),
+                  resolve_data_path(self.path('storage_root'),'zhixing'),
+                  resolve_data_path(self.path('storage_root'),'basis')])
 
 _current = None
 
@@ -33,12 +38,16 @@ def load(path):
     def resolve(value):
         p=Path(value).expanduser()
         return (p if p.is_absolute() else file.parent/p).resolve()
-    market=resolve(configured.get('market_root','data'))
+    storage=resolve(configured.get('storage_root',configured.get('market_root','data')))
+    grouped=load_layout(storage) is not None
+    market=resolve(configured['market_root']) if 'market_root' in configured else (storage/'01_market' if grouped else storage)
     state=resolve(configured.get('state_root','state'))
-    defaults={'market_root':market,'state_root':state,'business_db':market/'classification/business.sqlite',
-        'support_db':market/'industry/support.sqlite',
-        'collection_root':state/'collections','calendar_root':market/'observer_calendar',
-        'analysis_root':market/'analysis/stable_basis_v1','training_db':state/'training.sqlite',
+    defaults={'storage_root':storage,'market_root':market,'state_root':state,
+        'business_db':resolve_data_path(storage,'classification/business.sqlite'),
+        'support_db':resolve_data_path(storage,'industry/support.sqlite'),
+        'collection_root':resolve_data_path(storage,'industry/collections') if grouped else state/'collections',
+        'calendar_root':resolve_data_path(storage,'observer_calendar'),
+        'analysis_root':resolve_data_path(storage,'analysis/stable_basis_v1'),'training_db':state/'training.sqlite',
         'jobs_root':state/'jobs'}
     unknown=set(configured)-set(defaults)
     if unknown:raise ValueError('未知数据角色：'+', '.join(sorted(unknown)))
@@ -65,10 +74,12 @@ def current():
         _current=load(path)
     return _current
 
-def data_path(*parts): return current().path('market_root').joinpath(*parts)
+def data_path(*parts): return resolve_data_path(current().path('storage_root'),*parts)
 
 def example():
     return {'schema_version':'guanlan.config.v1','paths':{'market_root':'data','state_root':'state'},
             'server':{'host':'127.0.0.1','port':18738,'public_origin':'http://127.0.0.1:18738',
                       'token_env':'GUANLAN_ACCESS_TOKEN'},
             'provider':{'enabled':False}}
+
+def source_path(path): return resolve_registered_path(current().path('storage_root'),path)

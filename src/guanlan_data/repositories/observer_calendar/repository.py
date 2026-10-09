@@ -1,4 +1,6 @@
 """Read-only source adapter. A small archived holiday snapshot supplements central history."""
+from guanlan_data.config import source_path
+from guanlan_data.layout import same_source_stamp
 from guanlan_data import sqlite as database
 import hashlib
 import json
@@ -23,7 +25,7 @@ def market_path():
 
 def source_stamp(market=None, directory=None):
     folder = Path(directory) if directory is not None else root()
-    path = Path(market) if market is not None else market_path()
+    path = source_path(market) if market is not None else market_path()
     current=folder/'current.json'
     files = [path, Path(str(path) + '-wal'), current]
     if current.is_file():
@@ -71,7 +73,7 @@ _cache = {}
 
 
 def load(market=None, *, connection=None, directory=None):
-    path = Path(market) if market is not None else market_path()
+    path = source_path(market) if market is not None else market_path()
     folder = Path(directory) if directory is not None else root()
     stamp = source_stamp(path, folder)
     key = (str(path.resolve()), str(folder.resolve()))

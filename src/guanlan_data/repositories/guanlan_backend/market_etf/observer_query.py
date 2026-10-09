@@ -1,5 +1,6 @@
 """Bounded ETF read models; never initialize, collect, or modify a database."""
 from __future__ import annotations
+from guanlan_data.layout import resolve_data_path
 from guanlan_data import sqlite as database
 import copy
 import json
@@ -72,7 +73,7 @@ class EtfObserverQueries:
 
     def __init__(self, data_root: Path, *, ttl_seconds: float=5):
         self.root = Path(data_root).resolve()
-        self.path = self.root / 'market_etf/industry_etf_observer.sqlite'
+        self.path = resolve_data_path(self.root,'market_etf/industry_etf_observer.sqlite')
         self.ttl = ttl_seconds
         self._lock = threading.RLock()
         self._conn = None
@@ -115,7 +116,7 @@ class EtfObserverQueries:
     def _market_connection(self):
         if self._snapshot_active:
             return self._pinned_market
-        path = self.root / 'market/equity_daily_raw.sqlite'
+        path = resolve_data_path(self.root,'market/equity_daily_raw.sqlite')
         if not path.is_file():
             if self._market_conn is not None:
                 self._market_conn.close()
@@ -155,8 +156,8 @@ class EtfObserverQueries:
             market = self._market_connection()
             market_version = market.execute('PRAGMA data_version').fetchone()[0] if market else 'none'
             borrowed = lambda **_: _BorrowedConnection(conn)
-            calendar = CalendarRepository(self.root / 'market/equity_daily_raw.sqlite', borrowed, connect_market=(lambda: _BorrowedConnection(market)) if market is not None else None)
-            store = ObserverReadRepository(borrowed, self.root / 'market/equity_daily_raw.sqlite', calendar=calendar)
+            calendar = CalendarRepository(resolve_data_path(self.root,'market/equity_daily_raw.sqlite'), borrowed, connect_market=(lambda: _BorrowedConnection(market)) if market is not None else None)
+            store = ObserverReadRepository(borrowed, resolve_data_path(self.root,'market/equity_daily_raw.sqlite'), calendar=calendar)
             conn.execute('BEGIN')
             self._pinned_market = market
             self._snapshot_active = True
@@ -220,7 +221,7 @@ class EtfObserverQueries:
                 self._snapshot_active = False
                 self._pinned_market = None
                 changed = conn.execute('PRAGMA data_version').fetchone()[0] != version or (market is not None and market.execute('PRAGMA data_version').fetchone()[0] != market_version)
-                for path, identity in ((self.path, self._identity), (self.root / 'market/equity_daily_raw.sqlite', self._market_identity)):
+                for path, identity in ((self.path, self._identity), (resolve_data_path(self.root,'market/equity_daily_raw.sqlite'), self._market_identity)):
                     if identity is not None:
                         try:
                             stat = path.stat()
@@ -240,7 +241,7 @@ class EtfObserverQueries:
         source = self._market_connection()
         payload = None
         if source is not None and source.execute("SELECT 1 FROM sqlite_master WHERE name='trade_calendar'").fetchone():
-            payload = {'source': str(self.root / 'market/equity_daily_raw.sqlite'), 'rows': [tuple(row) for row in source.execute("SELECT cal_date,is_open FROM trade_calendar WHERE exchange='SSE' ORDER BY cal_date")]}
+            payload = {'source': str(resolve_data_path(self.root,'market/equity_daily_raw.sqlite')), 'rows': [tuple(row) for row in source.execute("SELECT cal_date,is_open FROM trade_calendar WHERE exchange='SSE' ORDER BY cal_date")]}
         if payload is None and conn.execute("SELECT 1 FROM sqlite_master WHERE name='etf_trade_calendar'").fetchone():
             payload = {'source': 'managed_etf_trade_calendar', 'rows': [tuple(row) for row in conn.execute('SELECT trade_date FROM etf_trade_calendar ORDER BY trade_date')]}
         if payload is None:

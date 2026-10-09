@@ -1,4 +1,5 @@
 """Read-only compatibility diagnostics. No auto migration, repair, or collection."""
+from guanlan_data.layout import resolve_data_path
 import json
 from pathlib import Path
 from contextlib import closing
@@ -8,12 +9,11 @@ from . import sqlite as database
 def contract():return json.loads((Path(__file__).parent/'contracts/databases.v1.json').read_text('utf-8'))
 
 def roles():
-    c=current();market=c.path('market_root');collection=c.path('collection_root')
-    return {'equity':market/'market/equity_daily_raw.sqlite','etf':market/'market_etf/industry_etf_observer.sqlite',
-        'status':market/'market_facts/equity_status_daily.sqlite','business':c.path('business_db'),
+    c=current();market=c.path('storage_root');collection=c.path('collection_root')
+    return {'equity':resolve_data_path(market,'market/equity_daily_raw.sqlite'),'etf':resolve_data_path(market,'market_etf/industry_etf_observer.sqlite'),
+        'status':resolve_data_path(market,'market_facts/equity_status_daily.sqlite'),'business':c.path('business_db'),
         'support':c.path('support_db'),
-        'catalog':collection/'catalog.sqlite','results':collection/'results.sqlite',
-        'kph':market/'market_events/kph_limit_up.sqlite'}
+        'catalog':collection/'catalog.sqlite','results':collection/'results.sqlite'}
 
 def inspect():
     report={'schema_version':'guanlan.doctor.v1','contract_version':2,'roles':{},'source_write':False}

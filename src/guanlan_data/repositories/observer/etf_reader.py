@@ -3,6 +3,7 @@
 No subclassing, private hooks, collectors, file scans, or per-object detail queries.
 The upstream v2 revision fences the supplemental read; mixed revisions never escape.
 """
+from guanlan_data.layout import resolve_data_path
 from guanlan_data import sqlite as database
 import copy
 import importlib
@@ -27,7 +28,7 @@ def public_session(data_root):
 class DailyBars:
     """Pinned SQLite read contract v1: schema versions 3/4, explicit named columns."""
     def __init__(self,data_root):
-        self.path=Path(data_root)/'market_etf/industry_etf_observer.sqlite'
+        self.path=resolve_data_path(Path(data_root),'market_etf/industry_etf_observer.sqlite')
 
     def read(self,codes):
         unique=sorted({c for c in codes if c})

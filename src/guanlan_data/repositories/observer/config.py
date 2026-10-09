@@ -6,7 +6,7 @@ HERE=Path(__file__).parent
 
 def settings():
     c=current()
-    return {'data_root':str(c.path('market_root')),'runtime_root':str(c.state),
+    return {'data_root':str(c.path('storage_root')),'runtime_root':str(c.state),
             'project_root':str(c.file.parent),'workspace_root':str(c.file.parent)}
 
 def jobs_root():return current().path('jobs_root')

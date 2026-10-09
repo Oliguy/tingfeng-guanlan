@@ -25,6 +25,9 @@ def target(database, uri=False):
 
 def connect(database, *args, **kwargs):
     path,readonly=target(database,kwargs.get('uri',False))
+    if path is not None and readonly:
+        from .config import source_path
+        path=source_path(path)
     if path is None:return sqlite3.connect(database,*args,**kwargs)
     cfg=current()
     protected=any(path==root or path.is_relative_to(root) for root in cfg.protected)

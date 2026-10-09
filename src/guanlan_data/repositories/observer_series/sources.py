@@ -1,4 +1,7 @@
 """Explicit, read-only adapters. No discovery, collectors or external requests."""
+from guanlan_data.config import source_path
+from guanlan_data.layout import same_source_stamp
+from guanlan_data.layout import resolve_data_path
 from guanlan_data import sqlite as database
 from contextlib import closing
 from bisect import bisect_left, bisect_right
@@ -14,7 +17,7 @@ def paths():
     from guanlan_data.repositories.observer_collections.config import results_path; from guanlan_data.repositories.observer_collections.config import support_path
     from guanlan_data.repositories.observer.config import settings
     from guanlan_data.repositories.industry_index.config import input_paths
-    return {'stock':input_paths()[1], 'etf':Path(settings()['data_root'])/'market_etf/industry_etf_observer.sqlite',
+    return {'stock':input_paths()[1], 'etf':resolve_data_path(Path(settings()['data_root']),'market_etf/industry_etf_observer.sqlite'),
             'support':support_path(), 'results':results_path()}
 
 
@@ -22,13 +25,13 @@ def digest(value):return hashlib.sha256(canonical(value).encode('utf-8')).hexdig
 
 
 def stamp(path):
-    p=Path(path)
+    p=source_path(path)
     return [[str(f.absolute()),f.stat().st_size,f.stat().st_mtime_ns,f.stat().st_ino] if f.is_file()
             else [str(f.absolute()),None,None,None] for f in (p,Path(str(p)+'-wal'))]
 
 
 def open_read(path):
-    c=database.connect(Path(path).absolute().as_uri()+'?mode=ro',uri=True,timeout=15)
+    c=database.connect(source_path(path).as_uri()+'?mode=ro',uri=True,timeout=15)
     c.row_factory=sqlite3.Row;c.execute('PRAGMA query_only=ON');c.execute('BEGIN')
     return c
 
@@ -148,7 +151,7 @@ def active_references(c):
 
 
 def receipt_signature(path):
-    p=Path(path)
+    p=source_path(path)
     if not p.is_file():return None
     with closing(open_read(p)) as c:
         if not c.execute("SELECT 1 FROM sqlite_master WHERE name='responses'").fetchone():return None

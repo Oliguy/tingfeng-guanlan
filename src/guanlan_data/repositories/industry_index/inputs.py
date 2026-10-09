@@ -1,4 +1,6 @@
 """Bounded read-only market inputs; values and source revisions are fingerprinted."""
+from guanlan_data.config import source_path
+from guanlan_data.layout import same_source_stamp
 from guanlan_data import sqlite as database
 from contextlib import contextmanager
 from datetime import date, timedelta, datetime, timezone
@@ -18,7 +20,7 @@ def digest(value):
 
 @contextmanager
 def readonly(path):
-    c = database.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True, timeout=5)
+    c = database.connect(source_path(path).as_uri() + '?mode=ro', uri=True, timeout=5)
     c.row_factory = sqlite3.Row
     try:
         c.execute('PRAGMA query_only=ON'); c.execute('BEGIN')

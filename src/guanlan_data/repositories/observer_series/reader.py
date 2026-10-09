@@ -1,4 +1,6 @@
 """Read-only batch/as-of/chart projection. Missing materialization has a terminal state."""
+from guanlan_data.config import source_path
+from guanlan_data.layout import same_source_stamp
 from contextlib import ExitStack,closing
 from functools import lru_cache
 import json
@@ -38,7 +40,7 @@ def changed_source(path,kind,old_json,current_stamp):
     with closing(sources.open_read(path)) as c:
         now=sources.source_marker(c,kind)
         dirty=sources.changes(c,kind,old['marker'],now)
-        if now==old['marker'] and json.loads(current_stamp)!=old['stamp']:dirty=None
+        if now==old['marker'] and json.loads(current_stamp)!=old['stamp'] and not same_source_stamp(__import__('guanlan_data.config',fromlist=['current']).current().path('storage_root'),old['stamp'],json.loads(current_stamp)):dirty=None
     return dirty
 
 

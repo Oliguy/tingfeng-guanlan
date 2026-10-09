@@ -1,4 +1,5 @@
 """Bounded original-path queries; never create/copy/write a market database."""
+from guanlan_data.layout import resolve_data_path
 from guanlan_data import sqlite as database
 from contextlib import contextmanager
 from pathlib import Path
@@ -30,9 +31,9 @@ def readonly(path):
 
 def configured_paths():
     from guanlan_data.config import current
-    c=current();root=c.path('market_root')
-    return {'raw':root/'market/equity_daily_raw.sqlite',
-            'status':root/'market_facts/equity_status_daily.sqlite',
+    c=current();root=c.path('storage_root')
+    return {'raw':resolve_data_path(root,'market/equity_daily_raw.sqlite'),
+            'status':resolve_data_path(root,'market_facts/equity_status_daily.sqlite'),
             'support':c.path('support_db'),'store':c.path('training_db')}
 
 class Data:
