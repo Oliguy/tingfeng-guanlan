@@ -15,7 +15,7 @@ from . import __version__
 class Server(ThreadingHTTPServer):
     daemon_threads=True
     request_queue_size=64
-    def __init__(self,service,host='127.0.0.1',port=18738,*,origin=None,access_token=None):
+    def __init__(self,service,host='127.0.0.1',port=18738,*,origin=None,access_token=None,settings_service=None):
         if host not in {'127.0.0.1','localhost','::1'} and (not access_token or len(access_token)<32):
             raise ValueError('非本机服务必须设置至少 32 字符的访问令牌')
         if access_token and len(access_token)<32:raise ValueError('访问令牌至少需要 32 字符')
@@ -31,6 +31,7 @@ class Server(ThreadingHTTPServer):
                 raise ValueError('远程服务必须设置访问令牌，包括回环地址上的反向代理')
         super().__init__((host,port),Handler)
         self.service=service
+        self.settings_service=settings_service
         self.origin=origin or f'http://127.0.0.1:{self.server_port}'
         self.authority=urlsplit(self.origin).netloc
         self.access_token=access_token
@@ -92,6 +93,9 @@ class Handler(BaseHTTPRequestHandler):
                         'write_token':session if session!='bearer' else None,
                         'capabilities':self.server.service.capabilities()})
                 if path=='/api/v1/calendar':return self.send(200,{'ok':True,'data':self.server.service.calendar()})
+                if path=='/api/v1/settings':
+                    if not self.server.settings_service:return self.send(200,{'ok':False,'detail':'此入口没有配置保存服务'})
+                    return self.send(200,{'ok':True,'data':self.server.settings_service.read()})
                 return self.send(404,{'detail':'接口不存在'})
             except Exception as exc:
                 return self.send(200,{'ok':False,'error':{'message':str(exc) if isinstance(exc,ValueError) else '数据读取失败，请运行 doctor 检查配置和数据库'}})
@@ -123,6 +127,10 @@ class Handler(BaseHTTPRequestHandler):
             return self.reject(403,'会话校验失败，请刷新页面')
         try:
             request=self.body()
+            if path=='/api/v1/settings':
+                if not self.server.settings_service:raise ValueError('此入口没有配置保存服务')
+                local_owner=self.client_address[0] in ('127.0.0.1','::1') and urlsplit(self.server.origin).hostname in ('127.0.0.1','localhost','::1')
+                return self.send(200,{'ok':True,'data':self.server.settings_service.invoke(request,local_owner=local_owner)})
             route=re.fullmatch(r'/api/v1/(home|etf|industry30|theme|movers|global|training)/invoke',path)
             if not route:return self.send(404,{'detail':'接口不存在'})
             if request.get('module')!=route[1]:raise ValueError('入口与请求模块不一致')

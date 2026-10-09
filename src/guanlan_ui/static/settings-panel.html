@@ -1,17 +1,43 @@
 <aside id="settingsPanel" class="settings-panel" role="region" aria-labelledby="settingsTitle" hidden>
-<header><h2 id="settingsTitle">看图设置</h2><button id="closeSettings" aria-label="关闭设置">关闭</button></header>
-<p>行业、ETF、题材与异动共用，修改后自动保存。</p>
+<header><h2 id="settingsTitle">设置</h2><button id="closeSettings" aria-label="关闭设置">关闭</button></header>
+<nav class="settings-tabs" role="tablist" aria-label="设置分类">
+<button id="settingsTabDisplay" role="tab" aria-selected="true" aria-controls="settingsDisplay" data-settings-tab="display">显示</button>
+<button id="settingsTabChart" role="tab" aria-selected="false" aria-controls="settingsChart" data-settings-tab="chart" tabindex="-1">看图</button>
+<button id="settingsTabData" role="tab" aria-selected="false" aria-controls="settingsData" data-settings-tab="data" tabindex="-1">数据引用</button>
+<button id="settingsTabConfig" role="tab" aria-selected="false" aria-controls="settingsConfig" data-settings-tab="config" tabindex="-1">配置管理</button></nav>
+<p id="settingsStatus" role="status" aria-live="polite">正在读取配置…</p><button id="retrySettingsSave" hidden>重试保存当前修改</button>
+<section id="settingsDisplay" role="tabpanel" aria-labelledby="settingsTabDisplay">
+<p>显示与看图选项即时生效，自动写入配置文件。</p>
+<label for="fontSize">界面字号</label><select id="fontSize"><option value="12">12 · 较小</option><option value="13">13 · 默认</option><option value="14">14 · 较大</option><option value="16">16 · 大字</option></select>
+<label for="density">界面密度</label><select id="density"><option value="normal">舒适</option><option value="compact">紧凑</option></select>
+<label class="settings-check"><input id="reduceMotion" type="checkbox">减少界面动画</label>
+<label for="startPage">启动栏目</label><select id="startPage"><option value="home">首页</option><option value="industry30">行业</option><option value="etf">ETF</option><option value="theme">题材</option><option value="movers">异动</option><option value="training">训练</option></select>
+<p>启动栏目在下次打开时使用；已有训练和对象视图继续保留。</p><button id="resetDisplaySettings">恢复默认显示</button></section>
+<section id="settingsChart" role="tabpanel" aria-labelledby="settingsTabChart" hidden>
 <label for="zoomGesture">K线缩放</label><select id="zoomGesture"><option value="ctrl">Ctrl + 滚轮</option><option value="alt">Alt + 滚轮</option><option value="wheel">直接滚轮</option><option value="off">关闭滚轮缩放</option></select>
 <label for="nextObjectKey">切换下一个 / 上一个对象</label><select id="nextObjectKey"><option value="tab">Tab / Shift + Tab</option><option value="alt-arrow">Alt + ↓ / Alt + ↑</option><option value="page">PageDown / PageUp</option><option value="off">关闭，保留正常 Tab 焦点</option></select>
-<p>按当前筛选、排序后的列表循环切换。输入框、设置栏和弹窗内保留正常按键；Esc 关闭设置。</p>
+<p>按筛选、排序后的列表循环切换。输入框、设置栏和弹窗内保留正常按键；训练页Tab保持正常焦点，Esc关闭设置。</p>
 <button id="resetShortcuts">恢复默认快捷键</button>
-<div class="settings-note"><h3>辅助线粗细</h3><p>拖动即时预览并保存。粗细与图上勾选均跨行业、ETF、成分股沿用。</p>
+<div class="settings-grid"><div><label for="defaultPeriod">默认周期</label><select id="defaultPeriod"><option value="daily">日线</option><option value="weekly">周线</option></select></div><div><label for="defaultPrice">默认价格显示</label><select id="defaultPrice"><option value="adjusted">复权 / 连续价格</option><option value="raw">原始价格</option></select></div></div>
+<label for="defaultRange">默认显示K线根数</label><input id="defaultRange" type="number" min="20" max="1000" step="10">
+<label for="defaultVolume">默认量能显示</label><select id="defaultVolume"><option value="mean_volume">平均成交量</option><option value="volume">成交量</option><option value="amount">成交额</option><option value="relative_volume_20">20日相对量能</option></select>
+<p>默认值用于尚未保存视图的对象；行业与题材合成指数使用连续价格。</p>
+<h3>辅助线</h3><div class="settings-layer-options"><label><input id="settingsShowZhixing" type="checkbox">知行白黄线</label><label><input id="settingsShowThirtyWeek" type="checkbox">30周线</label><label><input id="settingsShowBbi" type="checkbox">BBI</label></div>
 <div class="line-width-control" style="--indicator-color:#f4f6f5"><label for="zhixingWhiteWidth"><i aria-hidden="true"></i>知行白线<output id="zhixingWhiteWidthValue" for="zhixingWhiteWidth"></output></label><input id="zhixingWhiteWidth" type="range"></div>
 <div class="line-width-control" style="--indicator-color:#dfb319"><label for="zhixingYellowWidth"><i aria-hidden="true"></i>知行黄线<output id="zhixingYellowWidthValue" for="zhixingYellowWidth"></output></label><input id="zhixingYellowWidth" type="range"></div>
 <div class="line-width-control" style="--indicator-color:#42b8e8"><label for="thirtyWeekWidth"><i aria-hidden="true"></i>30周线<output id="thirtyWeekWidthValue" for="thirtyWeekWidth"></output></label><input id="thirtyWeekWidth" type="range"></div>
 <div class="line-width-control" style="--indicator-color:#c08cff"><label for="bbiWidth"><i aria-hidden="true"></i>BBI<output id="bbiWidthValue" for="bbiWidth"></output></label><input id="bbiWidth" type="range"></div>
-<button id="resetLineWidths">恢复默认粗细</button>
-<h3>左栏信号</h3><p>近5周站上30周线的周数越多越红，越少越绿；历史不足时不着色。</p>
-<div class="signal-legend" aria-label="站上线周数由0到5，绿到红"><span data-strength="0">0/5</span><span data-strength="1">1/5</span><span data-strength="2">2/5</span><span data-strength="3">3/5</span><span data-strength="4">4/5</span><span data-strength="5">5/5</span></div>
-<p>金色星标表示最近两个交易周的周收盘都高于各自30周线。整周休市跳过；末周按最新已存行情计算。</p></div>
-<div class="settings-note"><h3>股市日历</h3><p id="calendarStatus" role="status">读取本地日历…</p><p id="calendarDates"></p><p id="calendarCoverage"></p><p>默认使用本地日历。更新目标超出覆盖范围时，通过博采归藏续藏；来源未补齐时保留旧数据。</p></div></aside>
+<button id="resetLineWidths">恢复默认粗细</button><button id="resetChartSettings">恢复默认看图</button>
+<div class="settings-note"><h3>左栏信号</h3><p>近5周站上30周线的周数越多越红，越少越绿；历史不足时不着色。</p><div class="signal-legend" aria-label="站上线周数由0到5，绿到红"><span data-strength="0">0/5</span><span data-strength="1">1/5</span><span data-strength="2">2/5</span><span data-strength="3">3/5</span><span data-strength="4">4/5</span><span data-strength="5">5/5</span></div><p>金色星标表示最近两个交易周的周收盘均高于各自30周线。末周按最新已存行情计算。</p></div></section>
+<section id="settingsData" role="tabpanel" aria-labelledby="settingsTabData" hidden>
+<p>选择数据来源，检查通过后保存。数据引用在重新打开程序后生效。</p>
+<label for="dataMode">数据来源</label><select id="dataMode"><option value="local">本机数据库</option><option value="remote">远端听风观澜服务</option></select>
+<div id="localDataFields"><label for="storageRoot">总数据目录</label><input id="storageRoot" type="text" autocomplete="off" spellcheck="false"><label for="stateRoot">用户状态目录</label><input id="stateRoot" type="text" autocomplete="off" spellcheck="false"><label for="trainingDb">训练记录数据库</label><input id="trainingDb" type="text" autocomplete="off" spellcheck="false"><p>市场源和用户状态必须分开。改变地址只更改引用，原数据与训练记录留在原址。</p></div>
+<div id="remoteDataFields" hidden><label for="remoteUrl">服务地址</label><input id="remoteUrl" type="url" placeholder="https://guanlan.example.com" autocomplete="off" spellcheck="false"><label for="remoteTokenEnv">访问令牌环境变量</label><input id="remoteTokenEnv" type="text" autocomplete="off" spellcheck="false"><p>只保存变量名，令牌值由启动环境提供。远程请使用HTTPS或本机隧道。</p></div>
+<div class="settings-actions"><button id="checkDataSettings">检查引用</button><button id="saveDataSettings">保存数据引用</button></div><p id="dataSettingsStatus" role="status" aria-live="polite"></p>
+<details><summary>当前生效的数据引用</summary><dl id="activeDataReferences" class="settings-references"></dl></details>
+<div class="settings-note"><h3>股市日历</h3><p id="calendarStatus" role="status">打开此分类时读取本地日历…</p><p id="calendarDates"></p><p id="calendarCoverage"></p><p>覆盖不足时保留旧数据，采集沿用原更新入口。</p></div></section>
+<section id="settingsConfig" role="tabpanel" aria-labelledby="settingsTabConfig" hidden>
+<h3>配置文件</h3><p id="settingsFile" class="settings-file">正在读取…</p><p>配置文件保存显示、看图及数据引用。浏览器缓存用于即时预览；保存成功以此文件为准。</p>
+<div class="settings-actions"><button id="exportSettings">导出已保存配置</button><button id="importSettings">导入配置文件</button><input id="importSettingsFile" type="file" accept=".json,application/json" hidden></div>
+<p>导入后显示立即恢复，数据引用重新打开生效。导出文件不含访问令牌、行情或训练数据。</p><button id="reloadSettings">重新读取已保存配置</button></section></aside>

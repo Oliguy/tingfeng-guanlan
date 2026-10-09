@@ -21,6 +21,7 @@ def main(argv=None):
     connection=subs.add_parser('connect',help='本机界面通过 API 连接远程服务')
     connection.add_argument('--url',required=True);connection.add_argument('--token-env',default='GUANLAN_ACCESS_TOKEN')
     connection.add_argument('--port',type=int,default=18739);connection.add_argument('--open',action='store_true')
+    connection.add_argument('--settings-file',help='本机连接与显示设置JSON文件')
     args=parser.parse_args(argv)
     try:
         if args.command=='open':
@@ -42,10 +43,20 @@ def main(argv=None):
         if args.command=='connect':
             from .client import Client
             from .service import RemoteService
-            client=Client(args.url,os.environ.get(args.token_env));health=client.health()
+            from .settings import SettingsService,remote_check
+            from guanlan_data.settings_store import saved_data
+            default_dir=Path(os.environ.get('LOCALAPPDATA',Path.home()/'.config'))/'TingFengGuanLan'
+            setting_file=Path(args.settings_file or default_dir/'connection.settings.json').resolve()
+            active=saved_data(setting_file) or {'mode':'remote','url':args.url,'token_env':args.token_env}
+            if active['mode']!='remote':raise ValueError('connect入口用于远端连接；本机数据请使用serve --config')
+            client=Client(active['url'],os.environ.get(active['token_env']));health=client.health()
             if health.get('application')!='tingfeng-guanlan' or health.get('api_version')!=1:
                 raise ValueError('服务不支持听风观澜 API v1')
-            server=Server(RemoteService(client),port=args.port)
+            def validate_connection(data):
+                if data['mode']!='remote':raise ValueError('此连接入口请使用远端模式；本机数据通过serve配置启动')
+                return remote_check(data)
+            setting_service=SettingsService(setting_file,active,validate_connection,[{'role':'远端服务','path':active['url']}])
+            server=Server(RemoteService(client),port=args.port,settings_service=setting_service)
         else:
             from guanlan_data.config import configure
             config=configure(args.config)
@@ -55,9 +66,18 @@ def main(argv=None):
                 return 0 if report['status']=='compatible' else 2
             from .service import Service
             settings=config.raw.get('server',{})
-            server=Server(Service(),host=settings.get('host','127.0.0.1'),port=settings.get('port',18738),
-                origin=settings.get('public_origin'),access_token=os.environ.get(settings.get('token_env','GUANLAN_ACCESS_TOKEN')))
-        url=server.origin+'/home/'
+            from .settings import portable
+            connection=config.raw.get('connection',{})
+            if connection.get('mode')=='remote':
+                from .client import Client
+                from .service import RemoteService
+                service=RemoteService(Client(connection['url'],os.environ.get(connection['token_env'])))
+                if service.client.health().get('application')!='tingfeng-guanlan':raise ValueError('远端服务身份不匹配')
+            else:service=Service()
+            server=Server(service,host=settings.get('host','127.0.0.1'),port=settings.get('port',18738),
+                origin=settings.get('public_origin'),access_token=os.environ.get(settings.get('token_env','GUANLAN_ACCESS_TOKEN')),settings_service=portable(config))
+        start=server.settings_service.read()['preferences']['startPage'] if server.settings_service else 'home'
+        url=server.origin+'/'+start+'/'
         print('听风观澜 '+__version__+' · '+url,flush=True)
         if args.open:
             from guanlan_ui.desktop import open_url

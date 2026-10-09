@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tingfeng-guanlan"
-version = "2.2.0"
+version = "2.3.0"
 description = "听风观澜：独立界面、应用功能与数据合同"
 readme = "README.md"
 requires-python = ">=3.12"

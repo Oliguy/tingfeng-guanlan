@@ -4,13 +4,21 @@ window.ObserverPreferences=(()=>{
   const key='stockObserver:preferences:v1',layers=['showZhixing','showThirtyWeek','showBbi'];
   const lineWidths=Object.freeze({zhixingWhiteWidth:2.1,zhixingYellowWidth:2.2,thirtyWeekWidth:1.8,bbiWidth:1.8});
   const widthLimits=Object.freeze({min:0.5,max:5,step:0.1});
-  const defaults={zoomGesture:'ctrl',nextObjectKey:'tab',showZhixing:true,showThirtyWeek:true,showBbi:true,...lineWidths};
+  const defaults={zoomGesture:'ctrl',nextObjectKey:'tab',showZhixing:true,showThirtyWeek:true,showBbi:true,...lineWidths,fontSize:13,density:'normal',reduceMotion:false,startPage:'home',defaultPeriod:'daily',defaultPrice:'adjusted',defaultRange:150,defaultVolume:'mean_volume'};
   let current={...defaults};
   function normalize(value){
     const result={...defaults};
     if(['ctrl','alt','wheel','off'].includes(value?.zoomGesture))result.zoomGesture=value.zoomGesture;
     if(['tab','alt-arrow','page','off'].includes(value?.nextObjectKey))result.nextObjectKey=value.nextObjectKey;
     for(const field of layers)if(typeof value?.[field]==='boolean')result[field]=value[field];
+    if([12,13,14,16].includes(value?.fontSize))result.fontSize=value.fontSize;
+    if(['normal','compact'].includes(value?.density))result.density=value.density;
+    if(typeof value?.reduceMotion==='boolean')result.reduceMotion=value.reduceMotion;
+    if(['home','industry30','etf','theme','movers','training'].includes(value?.startPage))result.startPage=value.startPage;
+    if(['daily','weekly'].includes(value?.defaultPeriod))result.defaultPeriod=value.defaultPeriod;
+    if(['adjusted','raw'].includes(value?.defaultPrice))result.defaultPrice=value.defaultPrice;
+    if(Number.isInteger(value?.defaultRange)&&value.defaultRange>=20&&value.defaultRange<=1000)result.defaultRange=value.defaultRange;
+    if(['mean_volume','volume','amount','relative_volume_20'].includes(value?.defaultVolume))result.defaultVolume=value.defaultVolume;
     for(const field of Object.keys(lineWidths))if(typeof value?.[field]==='number'&&Number.isFinite(value[field])){
       result[field]=Math.round(Math.max(widthLimits.min,Math.min(widthLimits.max,value[field]))*10)/10;
     }
@@ -23,9 +31,13 @@ window.ObserverPreferences=(()=>{
     }catch{}
     return {...current};
   }
-  function set(values){
+  function set(values,{silent=false}={}){
     current=normalize({...read(),...values});
     try{localStorage.setItem(key,JSON.stringify(current));}catch{}
+    if(typeof dispatchEvent==='function'){
+      dispatchEvent(new CustomEvent('observer:preferences'));
+      if(!silent)dispatchEvent(new CustomEvent('observer:settings-dirty',{detail:values}));
+    }
     return {...current};
   }
   function permitsWheel(event){
@@ -41,5 +53,5 @@ window.ObserverPreferences=(()=>{
     if(setting==='page'&&!event.altKey&&!event.shiftKey)return event.key==='PageDown'?1:event.key==='PageUp'?-1:0;
     return 0;
   }
-  return {key,layers,lineWidths,widthLimits,read,set,permitsWheel,direction};
+  return {key,layers,lineWidths,widthLimits,defaults,read,set,permitsWheel,direction};
 })();

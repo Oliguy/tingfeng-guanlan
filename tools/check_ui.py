@@ -87,6 +87,7 @@ def check(base_url, output, widths):
                 if settings['x'] < 0 or settings['x']+settings['width'] > width:
                     failures.append(f'{module}@{width}: settings outside viewport')
                 # Preferences persist in the isolated browser context across routes/reload.
+                page.locator('#settingsTabChart').click()
                 page.locator('#zoomGesture').select_option('alt')
                 page.keyboard.press('Escape')
                 page.locator('#settingsPanel').wait_for(state='hidden')

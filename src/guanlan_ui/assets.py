@@ -9,7 +9,7 @@ SCRIPT=re.compile(r'<script src="/([a-z-]+\.js)"></script>')
 BUNDLES={'workspace-bundle.js':'workspace.html','movers-bundle.js':'movers.html','home-bundle.js':'home.html','training-bundle.js':'training.html'}
 LOCAL=LOCAL|{'home.css','home.js','home-navigation.js','tingfeng-guanlan-icon-v2-64.png'}
 LOCAL=LOCAL|{'training.css','training.js'}
-LOCAL=LOCAL|{'shell.css','shell.js','connection.js'}
+LOCAL=LOCAL|{'shell.css','shell.js','connection.js','settings.js'}
 
 def shell(html,module,bundle):
     """Every route composes the same outer frame; existing controllers own content."""
@@ -51,7 +51,7 @@ def asset(name, *, module='etf', page='list'):
         files=[]
         sources=SCRIPT.findall(template)
         sources=[s for s in sources if s!='preferences.js']
-        for source in ['preferences.js','connection.js','shell.js',*sources]:
+        for source in ['preferences.js','connection.js','settings.js','shell.js',*sources]:
             if source not in LOCAL:raise FileNotFoundError(source)
             stat=(HERE/'static'/source).stat();files.append((source,stat.st_mtime_ns,stat.st_size))
         return _bundle(tuple(files)),'application/javascript; charset=utf-8'
