@@ -1,0 +1,19 @@
+{
+  "version": "observer_math_v1",
+  "basis": "ETF v16 display formulas; adopted locally without numerical change, 2026-10-04",
+  "upstream": [
+    {
+      "path": "data_management/market_etf/domain/chart.py",
+      "sha256": "dd630fe05f9f9a41e95ffb2d54344a98c2c4dec2374596a1b15df38300bed85f"
+    },
+    {
+      "path": "data_management/market_etf/domain/primitives.py",
+      "sha256": "7b025bdca484e29c2351c991d3ca59ab6b2af37a71b79573c44bd0e2b961554a"
+    },
+    {
+      "path": "data_management/market_etf/observer_query.py",
+      "sha256": "44e1e999978bbcc9374e33f87832af9f0570df96c1147d7d91d2f266a35dc4d9"
+    }
+  ],
+  "policy": "Runtime uses this package, not source paths; upstream formula changes require explicit parity review."
+}

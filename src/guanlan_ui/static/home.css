@@ -1,0 +1,192 @@
+/* Module rules stay inside app-content; shared tokens live in shell.css. */
+:where(.app-content) button,:where(.app-content) select,:where(.app-content) .button{background:var(--panel);border:1px solid var(--line);border-radius:5px;color:var(--text);padding:6px 15px;cursor:pointer}
+:where(.app-content) button:hover,:where(.app-content) select:hover,:where(.app-content) .button:hover{border-color:#62758a;background:#25303a}
+:where(.app-content) button:disabled{cursor:wait;opacity:.6}
+:where(.app-content) button:focus-visible,:where(.app-content) a:focus-visible,:where(.app-content) select:focus-visible{outline:2px solid #96c8ed;outline-offset:3px}
+:where(.app-content) a{color:inherit;text-decoration:none}
+:where(.app-content) h1,:where(.app-content) h2,:where(.app-content) p{margin:0}
+:where(.app-content) h1{font-size:24px;letter-spacing:.03em}
+:where(.app-content) h2{font-size:18px;font-weight:600}
+:where(.app-content) .up{color:var(--red)}
+:where(.app-content) .down{color:var(--green)}
+:where(.app-content) .muted,:where(.app-content) .subtle,:where(.app-content) .date-label{color:var(--muted)}
+:where(.app-content) .primary{background:var(--selected);border-color:#43566c}
+:where(.app-content) .text-link,:where(.app-content) .text-button{font-size:var(--font-control);color:#b7d8f4}
+:where(.app-content) .text-link:hover{text-decoration:underline}
+:where(.app-content) .text-button{border:0;padding:0;background:none!important;text-align:left}
+:where(.app-content) .home-header{min-height:91px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px}
+:where(.app-content) .home-header h1{flex:1}
+:where(.app-content) .market-date{flex:1;font-size:var(--font-control)}
+:where(.app-content) .market-date small{display:block;margin-top:5px;color:var(--muted);font-size:var(--font-caption)}
+:where(.app-content) .header-actions{display:flex;gap:9px;align-items:center}
+:where(.app-content) .header-actions button,:where(.app-content) .header-actions .button{font-size:var(--font-control);min-width:135px;text-align:center}
+:where(.app-content) .section-kicker{display:flex;justify-content:space-between;font-size:var(--font-body);color:var(--muted);padding-top:18px}
+:where(.app-content) .metrics{display:grid;grid-template-columns:1.16fr 1fr 1.05fr 1.12fr;padding:25px 0 20px;border-bottom:1px solid var(--line)}
+:where(.app-content) .metric{min-width:0;padding:0 24px;border-left:1px solid var(--line)}
+:where(.app-content) .metric:first-child{border:0;padding-left:0}
+:where(.app-content) .metric h2{font-size:var(--font-body);color:var(--muted);font-weight:400;margin-bottom:6px}
+:where(.app-content) .metric-content{display:flex;align-items:baseline;gap:17px;min-height:37px;flex-wrap:wrap;color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) .metric-content strong{font-size:25px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.01em;line-height:1.3}
+:where(.app-content) .metric-content .count{white-space:nowrap;display:inline-flex;align-items:baseline;gap:7px}
+:where(.app-content) .metric-content small{font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .metric-note{font-size:var(--font-caption);color:var(--muted);margin-top:10px}
+:where(.app-content) .metric .text-link,:where(.app-content) .metric .text-button{display:inline-block;margin-top:10px}
+:where(.app-content) .breadth-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:8px;background:var(--line)}
+:where(.app-content) .breadth-bar i{display:block}
+:where(.app-content) .breadth-bar .up{background:var(--red)}
+:where(.app-content) .breadth-bar .down{background:var(--green)}
+:where(.app-content) .breadth-bar .flat{background:#8d99a6}
+:where(.app-content) .primary-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1.1fr);gap:28px;padding:17px 0;border-bottom:1px solid var(--line)}
+:where(.app-content) .section-heading{display:flex;align-items:center;gap:18px;min-height:35px;flex-wrap:wrap}
+:where(.app-content) .subtle,:where(.app-content) .date-label{font-size:var(--font-caption);white-space:nowrap}
+:where(.app-content) .date-label{margin-left:auto}
+:where(.app-content) .section-heading .text-link{margin-left:auto;white-space:nowrap}
+:where(.app-content) .industry-tools{display:flex;gap:12px;align-items:center;margin-left:auto}
+:where(.app-content) .segmented{display:flex;gap:5px}
+:where(.app-content) .segmented button,:where(.app-content) select{font-size:var(--font-control);padding:6px 14px}
+:where(.app-content) .segmented button[aria-pressed=true]{background:var(--selected);border-color:#465d74}
+:where(.app-content) .industry-legend{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:var(--font-caption);color:var(--muted);margin:7px 0 14px}
+:where(.app-content) .industry-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+:where(.app-content) .industry-tile{border:1px solid transparent;border-radius:4px;background:var(--panel);padding:9px 9px 7px;min-height:69px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+:where(.app-content) .industry-tile:hover{border-color:#6b7e92;filter:brightness(1.15)}
+:where(.app-content) .tile-name{font-size:var(--font-body);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.app-content) .tile-value{font:600 18px/1.4 var(--font-number);font-variant-numeric:tabular-nums}
+:where(.app-content) .tile-note{font-size:var(--font-tiny);white-space:nowrap;color:#bac6d2}
+:where(.app-content) .industry-tile.stale{border:1px dashed #52606d}
+:where(.app-content) .industry-tile.loading{color:var(--muted);animation:pulse 2s ease-in-out infinite}
+:where(.app-content) .section-foot{display:flex;justify-content:space-between;font-size:var(--font-caption);color:var(--muted);padding-top:11px}
+:where(.app-content) .clues-section{border-left:1px solid var(--line);padding-left:28px}
+:where(.app-content) .clue{display:block;padding:15px 0;border-bottom:1px solid var(--line)}
+:where(.app-content) .clue:first-child{padding-top:24px}
+:where(.app-content) .clue:hover .clue-name{color:#b7d8f4}
+:where(.app-content) .clue-top{display:flex;gap:20px;align-items:baseline}
+:where(.app-content) .clue-name{font-weight:600;font-size:var(--font-label)}
+:where(.app-content) .clue-condition{color:var(--muted);font-size:var(--font-caption)}
+:where(.app-content) .clue-data{font-size:var(--font-control);margin-top:6px}
+:where(.app-content) .clue-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:5px;color:#b7d8f4;font-size:var(--font-caption)}
+:where(.app-content) .clue-bottom time{color:var(--muted)}
+:where(.app-content) .secondary-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:28px;padding:16px 0 20px;border-bottom:1px solid var(--line)}
+:where(.app-content) .theme-section{border-left:1px solid var(--line);padding-left:28px;position:relative}
+:where(.app-content) .theme-manage{display:block;text-align:right;margin-top:16px}
+:where(.app-content) .theme-item{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
+:where(.app-content) .theme-top{display:flex;gap:30px;align-items:center}
+:where(.app-content) .theme-top strong{font-size:var(--font-label)}
+:where(.app-content) .theme-top span{font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .theme-numbers{display:flex;align-items:baseline;gap:12px;margin:8px 0 17px}
+:where(.app-content) .theme-numbers strong{font:600 17px/1.3 var(--font-number)}
+:where(.app-content) .theme-numbers small{font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .theme-numbers .weekly{margin-left:auto}
+:where(.app-content) table{width:100%;border-collapse:collapse;font-size:var(--font-control);table-layout:fixed}
+:where(.app-content) th{color:var(--muted);font-weight:400;font-size:var(--font-caption);text-align:left;padding:7px 0}
+:where(.app-content) td{padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+:where(.app-content) th:not(:first-child),:where(.app-content) td:not(:first-child){text-align:right}
+:where(.app-content) th:first-child{width:43%}
+:where(.app-content) td a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.app-content) td a:hover{text-decoration:underline}
+:where(.app-content) td small{color:var(--muted);font-size:var(--font-tiny);margin-left:6px}
+:where(.app-content) .loading{color:var(--muted);padding:20px 0;font-size:var(--font-control)}
+:where(.app-content) .block-status{font-size:var(--font-control);color:#e4bc86;display:flex;align-items:center;gap:12px}
+:where(.app-content) .block-status:not(:empty){padding:7px 0}
+:where(.app-content) .block-status button{font-size:var(--font-caption);padding:3px 9px}
+:where(.app-content) .home-footer{display:flex;justify-content:space-between;align-items:center;min-height:39px;font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) dialog{background:var(--panel);color:var(--text);border:1px solid #465260;border-radius:10px;width:min(780px,calc(100vw - 40px));max-height:85vh;padding:22px;box-shadow:0 20px 80px #0009}
+:where(.app-content) dialog::backdrop{background:#05080bc2}
+:where(.app-content) dialog header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+:where(.app-content) dialog h2{font-size:20px}
+:where(.app-content) dialog p{margin:10px 0}
+:where(.app-content) dialog dd{margin:4px 0 16px;color:#b8c0cb;font-size:var(--font-body)}
+:where(.app-content) dialog dt{font-weight:600}
+:where(.app-content) .data-row{border-top:1px solid var(--line);padding:13px 0}
+:where(.app-content) .data-row h3{font-size:var(--font-label);margin:0 0 7px}
+:where(.app-content) .data-row p{font-size:var(--font-control);color:var(--muted);margin:4px 0}
+:where(.app-content) .data-row details{font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .data-row pre{white-space:pre-wrap;word-break:break-all;max-height:170px;overflow:auto;font-size:var(--font-tiny)}
+:where(.app-content) .dialog-actions,:where(.app-content) .update-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+:where(.app-content) .job{border-top:1px solid var(--line);padding:10px 0;font-size:var(--font-control)}
+:where(.app-content) .job h3{font-size:var(--font-label)}
+:where(.app-content) .job-stage{margin:5px 0}
+:where(.app-content) #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--selected);border:1px solid #62758a;border-radius:7px;max-width:80vw;padding:10px 20px;z-index:20;display:none}
+:where(.app-content) #toast.show{display:block}
+@keyframes pulse{50%{opacity:.45}}
+:where(.app-content) .metric-content strong:not(.up):not(.down){color:var(--text)}
+:where(.app-content) .tile-name{font-size:var(--font-control)}
+@media(min-width:1700px){
+:where(.app-content) .primary-grid{grid-template-columns:minmax(0,2.2fr) minmax(300px,1fr)}
+:where(.app-content) .industry-tile{min-height:86px}
+:where(.app-content) .clue{padding:22px 0}
+}
+@media(max-width:1400px){
+:where(.app-content) .primary-grid{gap:23px;grid-template-columns:minmax(0,2.15fr) minmax(245px,1fr)}
+:where(.app-content) .clues-section{padding-left:23px}
+:where(.app-content) .section-heading{gap:12px}
+:where(.app-content) .industry-tools{gap:6px}
+:where(.app-content) .industry-tools select{max-width:108px}
+:where(.app-content) .segmented button{padding:6px 10px}
+:where(.app-content) .metric{padding:0 20px}
+:where(.app-content) .metric-content{gap:12px}
+:where(.app-content) .metric-content strong{font-size:24px}
+:where(.app-content) .industry-tile{min-height:65px;padding:7px}
+:where(.app-content) .tile-name{font-size:var(--font-control)}
+:where(.app-content) .industry-section .date-label{order:4;margin:0}
+:where(.app-content) .industry-legend{margin-top:8px}
+}
+@media(max-width:1150px){
+:where(.app-content) .metrics{grid-template-columns:repeat(2,1fr);gap:24px}
+:where(.app-content) .metric:nth-child(3){border-left:0;padding-left:0}
+:where(.app-content) .primary-grid{grid-template-columns:1fr}
+:where(.app-content) .clues-section{border-left:0;padding-left:0}
+:where(.app-content) .clues-section #clues{display:grid;grid-template-columns:repeat(2,1fr);gap:0 22px}
+:where(.app-content) .clue:first-child{padding-top:15px}
+:where(.app-content) .industry-tools{margin-left:auto}
+:where(.app-content) .industry-section .date-label{order:0}
+:where(.app-content) .secondary-grid{grid-template-columns:1fr}
+:where(.app-content) .theme-section{border:0;padding:0}
+:where(.app-content) .theme-manage{margin-top:12px}
+:where(.app-content) .home-header{gap:16px}
+:where(.app-content) .header-actions button,:where(.app-content) .header-actions .button{min-width:0}
+}
+@media(max-width:700px){
+:where(.app-content) .home-header{padding:18px 0;flex-wrap:wrap;gap:8px 18px}
+:where(.app-content) .home-header h1{font-size:22px;flex:none}
+:where(.app-content) .market-date{flex:1}
+:where(.app-content) .header-actions{width:100%;justify-content:flex-end;margin-top:6px}
+:where(.app-content) .metrics{gap:22px 0;padding-top:18px}
+:where(.app-content) .metric{padding:0 0 0 14px}
+:where(.app-content) .metric-content{gap:6px 12px;min-height:38px}
+:where(.app-content) .metric-content strong{font-size:22px}
+:where(.app-content) .metric-content .count{gap:5px}
+:where(.app-content) .metric:first-child .metric-content{gap:5px 12px}
+:where(.app-content) .metric-note{font-size:var(--font-tiny)}
+:where(.app-content) .metric h2{font-size:var(--font-control)}
+:where(.app-content) .industry-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+:where(.app-content) .industry-tools{width:100%;justify-content:space-between}
+:where(.app-content) .industry-legend{flex-wrap:wrap;gap:5px}
+:where(.app-content) .industry-legend span:nth-child(2){width:100%;order:3}
+:where(.app-content) .clues-section #clues{grid-template-columns:1fr}
+:where(.app-content) .section-heading{gap:8px 12px}
+:where(.app-content) .secondary-grid .date-label{margin-left:0}
+:where(.app-content) .secondary-grid .subtle{order:3;width:100%}
+:where(.app-content) .section-foot{flex-wrap:wrap;gap:5px}
+:where(.app-content) .tile-name{font-size:var(--font-caption)}
+:where(.app-content) .tile-value{font-size:17px}
+:where(.app-content) .theme-numbers{flex-wrap:wrap}
+:where(.app-content) .theme-numbers .weekly{margin-left:0}
+:where(.app-content) dialog{padding:18px}
+:where(.app-content) td{font-size:var(--font-caption)}
+}
+@media(prefers-reduced-motion:reduce){
+:where(.app-content) .industry-tile.loading{animation:none}
+}
+@media(max-width:420px){
+:where(.app-content) .industry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+:where(.app-content) .market-date{flex-basis:100%}
+}
+:where(.app-content) .older-etfs{font-size:var(--font-control);color:var(--muted);margin-top:12px}
+:where(.app-content) .older-etfs summary{cursor:pointer}
+:where(.app-content) .older-date{font-size:var(--font-caption);margin:10px 0 3px}
+
+/* Content layout inside the common frame. */
+.app-content #overview{margin:0;padding:0;max-width:none}
+.app-content .home-header{min-height:64px}
+.app-content .home-header h1{font-size:20px}
+@media(max-width:760px){.app-content .home-header{padding:14px 0}}

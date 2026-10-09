@@ -1,0 +1,239 @@
+/* Module rules stay inside app-content; shared tokens live in shell.css. */
+:where(.app-content) button,:where(.app-content) input,:where(.app-content) select,:where(.app-content) textarea{font:inherit;border:1px solid var(--line);border-radius:6px;background:#20252c;color:var(--text);padding:8px}
+:where(.app-content) button{cursor:pointer}
+:where(.app-content) button:hover:not(:disabled){filter:brightness(1.13)}
+:where(.app-content) button:disabled{cursor:not-allowed;opacity:.45}
+:where(.app-content) button:focus-visible,:where(.app-content) a:focus-visible,:where(.app-content) input:focus-visible,:where(.app-content) select:focus-visible,:where(.app-content) summary:focus-visible,:where(.app-content) textarea:focus-visible,:where(.app-content) canvas:focus-visible{outline:2px solid #b9d4f8;outline-offset:3px}
+:where(.app-content) a{color:inherit;text-decoration:none}
+:where(.app-content) h1,:where(.app-content) h2,:where(.app-content) h3,:where(.app-content) p{margin-top:0}
+:where(.app-content) h3{font-size:var(--font-label);font-weight:600}
+:where(.app-content) kbd{font:var(--font-caption) var(--font-number);padding:1px 4px;border:1px solid currentColor;border-radius:4px;opacity:.75}
+:where(.app-content) .page{padding:0 24px;min-width:0}
+:where(.app-content) .top{height:65px;display:flex;align-items:center;border-bottom:1px solid var(--line);gap:32px}
+:where(.app-content) .top h1{font-size:19px;font-weight:600;margin:0}
+:where(.app-content) .top nav{display:flex;gap:20px}
+:where(.app-content) .top nav button{border:0;background:none;color:var(--muted);font-size:var(--font-body)}
+:where(.app-content) .saved{margin-left:auto;color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) #message:not(:empty){padding:10px 14px;background:#332a1d;color:var(--gold);border-radius:6px;margin-top:10px}
+:where(.app-content) .eyebrow,:where(.app-content) .subtle{color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) .intro{padding:44px 0 25px;max-width:860px}
+:where(.app-content) .intro h2{font-size:32px;margin:12px 0}
+:where(.app-content) .intro>p{line-height:1.9;color:var(--muted)}
+:where(.app-content) .start-line{display:flex;align-items:center;gap:24px;padding:16px 0 24px}
+:where(.app-content) .primary{background:#c9dbef;color:var(--bg);border:0;padding:12px 22px;font-weight:600}
+:where(.app-content) .options{padding:14px 0;border-top:1px solid var(--line)}
+:where(.app-content) summary{cursor:pointer;color:var(--muted)}
+:where(.app-content) .option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px}
+:where(.app-content) label{font-size:var(--font-body);color:var(--muted)}
+:where(.app-content) .option-grid label{display:flex;flex-direction:column;gap:7px}
+:where(.app-content) .option-grid .check{flex-direction:row;align-items:center}
+:where(.app-content) .options p{font-size:var(--font-control);margin-top:16px;color:var(--muted)}
+:where(.app-content) .sessions{border-top:1px solid var(--line);padding-top:20px}
+:where(.app-content) .session-row{padding:14px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px}
+:where(.app-content) .session-row span{color:var(--muted);font-size:var(--font-body)}
+:where(.app-content) .session-row button{margin-left:auto}
+:where(.app-content) #workbench{display:flex;flex-direction:column;min-height:calc(100dvh - 110px)}
+:where(.app-content) .session{display:flex;align-items:center;gap:20px;padding:20px 0;flex:none}
+:where(.app-content) .session .eyebrow{margin-bottom:7px}
+:where(.app-content) .session h2{margin:0;font-size:25px;font-weight:600}
+:where(.app-content) .stage{font-size:var(--font-body);font-weight:400;margin-left:12px;padding:5px 10px;background:#28333e;color:#c9dbef;border-radius:4px}
+:where(.app-content) .phase-track{margin-left:auto;color:var(--muted);font-size:var(--font-body)}
+:where(.app-content) .phase-track b{color:var(--text)}
+:where(.app-content) .phase-track i{font-style:normal;color:#586574;margin:0 8px}
+:where(.app-content) .quiet{background:transparent;color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) .main{display:grid;grid-template-columns:minmax(0,1fr) 294px;gap:26px;min-height:0;flex:1}
+:where(.app-content) .chart-section{display:flex;flex-direction:column;min-width:0}
+:where(.app-content) .chart-toolbar{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:1px solid var(--line);font-size:var(--font-control)}
+:where(.app-content) .periods{display:flex;gap:6px}
+:where(.app-content) .periods button{padding:4px 10px;font-size:var(--font-control);background:transparent}
+:where(.app-content) .periods [aria-pressed=true]{color:#c9dbef;border-color:#526b87}
+:where(.app-content) .indicators{display:flex;gap:15px}
+:where(.app-content) .ma5{color:var(--gold)}
+:where(.app-content) .ma20{color:#c08cff}
+:where(.app-content) .quotes{display:flex;gap:18px;flex-wrap:wrap;font-size:var(--font-control);color:var(--muted);padding:11px 0;min-height:39px}
+:where(.app-content) .quotes b{color:var(--text);margin-left:5px}
+:where(.app-content) .chart{position:relative;flex:1;min-height:310px;height:calc(100dvh - 310px)}
+:where(.app-content) .chart canvas{position:absolute;inset:0;width:100%;height:100%}
+:where(.app-content) #crosshair{touch-action:none;cursor:crosshair}
+:where(.app-content) .inspect{font-size:var(--font-caption);color:var(--muted);padding:8px 0;min-height:29px}
+:where(.app-content) .chart-foot{display:flex;justify-content:space-between;gap:10px;font-size:var(--font-control);color:var(--muted);padding:9px 0;border-top:1px solid var(--line)}
+:where(.app-content) .chart-foot strong{font-weight:400;color:#c9dbef}
+:where(.app-content) .aside{display:flex;flex-direction:column;gap:17px}
+:where(.app-content) .balance{display:grid;grid-template-columns:1fr auto;gap:11px;margin:0;font-size:var(--font-body)}
+:where(.app-content) .balance dt{color:var(--muted)}
+:where(.app-content) .balance dd{margin:0;font-variant-numeric:tabular-nums;text-align:right}
+:where(.app-content) .balance .main-value{font-size:25px;font-weight:600;line-height:1}
+:where(.app-content) .position-state{margin-top:14px;padding:10px 12px;background:#1e252d;border-left:2px solid #607386;font-size:var(--font-control);color:var(--muted);line-height:1.65}
+:where(.app-content) .position-state b{color:#c9dbef;font-weight:500}
+:where(.app-content) .operate{border-top:1px solid var(--line);padding-top:13px}
+:where(.app-content) .operate-head{display:flex;justify-content:space-between;font-size:var(--font-control);margin-bottom:11px}
+:where(.app-content) .operate-head span{color:var(--muted)}
+:where(.app-content) .trade-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+:where(.app-content) .trade{min-height:77px;text-align:left;padding:11px 13px;display:flex;flex-direction:column;gap:8px}
+:where(.app-content) .trade .title{font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
+:where(.app-content) .caption{font-size:var(--font-caption)}
+:where(.app-content) .buy{background:#a34044;border-color:#a34044;color:#fff}
+:where(.app-content) .sell{background:#245749;border-color:#3c7a67;color:#ddf7e8}
+:where(.app-content) .hold{grid-column:1/-1;background:#283644;border-color:#4c637b;min-height:70px;position:relative}
+:where(.app-content) .hold kbd{position:absolute;right:15px;top:15px}
+:where(.app-content) .rule-hint{font-size:var(--font-caption);color:var(--muted);line-height:1.7;margin:10px 0}
+:where(.app-content) .feedback{font-size:var(--font-control);color:#c9dbef;line-height:1.6;min-height:38px}
+:where(.app-content) .history{border-top:1px solid var(--line);padding-top:10px}
+:where(.app-content) .history summary{font-size:var(--font-control)}
+:where(.app-content) .history ol{padding-left:20px;font-size:var(--font-control);line-height:1.8;max-height:130px;overflow:auto;color:var(--muted)}
+:where(.app-content) footer{padding:15px 0;color:var(--muted);font-size:var(--font-caption);display:flex;align-items:center;gap:7px;border-top:1px solid var(--line);margin-top:12px}
+:where(.app-content) footer>span:last-child{margin-left:auto}
+:where(.app-content) .dot{width:6px;height:6px;background:var(--green);border-radius:50%}
+:where(.app-content) .positive{color:var(--red)}
+:where(.app-content) .negative{color:var(--green)}
+:where(.app-content) #review-panel{border-top:1px solid var(--line);margin-top:20px;padding:20px 0}
+:where(.app-content) .metrics{display:flex;gap:30px;flex-wrap:wrap;padding:10px 0 25px}
+:where(.app-content) .metrics span{display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) .metrics b{font-size:20px;color:var(--text);font-weight:500}
+:where(.app-content) .review-controls{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+:where(.app-content) textarea{display:block;width:100%;margin:8px 0 12px}
+:where(.app-content) .session-row .badge{color:var(--gold)}
+:where(.app-content) .chart-legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:0 0 8px;font-size:var(--font-caption);min-height:24px}
+:where(.app-content) .buy-key{color:var(--red)}
+:where(.app-content) .sell-key{color:var(--green)}
+:where(.app-content) .cost-key{color:var(--gold)}
+:where(.app-content) #cost{color:var(--gold)}
+:where(.app-content) .session-actions{display:flex;gap:8px;margin-left:auto;flex:none}
+:where(.app-content) .session-actions button{font-size:var(--font-control);white-space:nowrap}
+:where(.app-content) #next-stock{border-color:#65758a;background:#283644;color:#d9e7f5}
+:where(.app-content) .session-summary{display:flex;flex-direction:column;gap:6px;min-width:0}
+:where(.app-content) .session-summary span{font-size:var(--font-caption)}
+:where(.app-content) .session-return{font-variant-numeric:tabular-nums;white-space:nowrap}
+:where(.app-content) .session-record{border-top:1px solid var(--line);padding:12px 0;margin-top:12px}
+:where(.app-content) .session-record summary{font-size:var(--font-body);color:var(--text)}
+:where(.app-content) #record-caption{font-size:var(--font-control);color:var(--muted)}
+:where(.app-content) .session-record>p{margin:12px 0;line-height:1.7}
+:where(.app-content) .record-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 24px;padding:8px 0 16px}
+:where(.app-content) .record-grid>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+:where(.app-content) .record-grid span{font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .record-grid strong{font-size:var(--font-body);font-weight:500;overflow-wrap:anywhere}
+:where(.app-content) .history-tools{display:flex;gap:8px;align-items:center;padding:12px 0}
+:where(.app-content) .history-tools span{font-size:var(--font-control);color:var(--muted);margin-right:auto}
+:where(.app-content) .history-tools button{font-size:var(--font-control);padding:6px 9px}
+:where(.app-content) .history-scroll{overflow:auto;max-height:330px;width:100%}
+:where(.app-content) .history-table{border-collapse:collapse;min-width:850px;width:100%;font-size:var(--font-control)}
+:where(.app-content) .history-table th,:where(.app-content) .history-table td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.6}
+:where(.app-content) .history-table th{color:var(--muted);font-weight:500;background:var(--panel);position:sticky;top:0}
+:where(.app-content) .history-table td small{display:block;color:var(--muted);font-size:var(--font-caption);max-width:230px;overflow-wrap:anywhere}
+.app-content .history{margin-top:8px;padding-bottom:16px}
+@media(max-width:1050px){
+:where(.app-content) .record-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+:where(.app-content) .session-actions{margin-left:auto}
+}
+@media(max-width:760px){
+:where(.app-content) .record-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+:where(.app-content) .session-actions{width:100%;justify-content:flex-end}
+:where(.app-content) .history-tools{flex-wrap:wrap}
+:where(.app-content) .history-tools span{width:100%}
+:where(.app-content) .session-return{margin-left:auto}
+:where(.app-content) .session-row .badge{font-size:var(--font-control)}
+}
+:where(.app-content) .indicators label{display:flex;align-items:center;gap:4px;font-size:var(--font-caption);white-space:nowrap;cursor:pointer}
+:where(.app-content) .indicators input{margin:0;accent-color:var(--gold)}
+:where(.app-content) .indicators i{width:12px;border-top:2px solid #42b8e8}
+:where(.app-content) .indicators .pair{height:6px;border-top:2px solid #f4f6f5;border-bottom:2px solid #dfb319}
+:where(.app-content) .indicators .purple{border-color:#c08cff}
+:where(.app-content) .chart-navigator{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding:8px 0;font-size:var(--font-caption);flex:none}
+:where(.app-content) .chart-navigator button{padding:4px 7px;white-space:nowrap;font-size:var(--font-caption)}
+:where(.app-content) .chart-navigator input{padding:0;accent-color:#8daec9;min-width:0}
+:where(.app-content) .chart-navigator #timelineRange{flex:1;width:80px}
+:where(.app-content) .chart-navigator #zoomRange{width:76px}
+:where(.app-content) .chart-navigator #viewStatus{color:var(--muted);white-space:nowrap;min-width:75px}
+.app-content .session{padding:13px 0}
+.app-content .session h2{font-size:22px}
+.app-content .main{gap:18px;grid-template-columns:minmax(0,1fr) 282px}
+.app-content .chart{height:calc(100dvh - 340px);min-height:260px}
+.app-content .balance{gap:8px}
+.app-content .aside{gap:12px}
+.app-content .chart-section{padding-right:4px}
+.app-content .position-state{margin-top:10px;padding:8px 10px}
+.app-content .trade{min-height:66px}
+.app-content .hold{min-height:62px}
+.app-content .feedback{font-size:var(--font-caption)}
+.app-content .chart-foot{font-size:var(--font-caption)}
+.app-content .chart-toolbar{gap:8px}
+@media(max-width:1050px){
+.app-content .main{grid-template-columns:minmax(0,1fr) 252px;gap:14px}
+:where(.app-content) .indicators{gap:8px}
+:where(.app-content) .chart-navigator #viewStatus{display:none}
+.app-content .chart-foot{flex-direction:column}
+}
+@media(max-width:760px){
+.app-content .main{display:flex;flex-direction:column;gap:18px}
+.app-content .chart{height:310px;flex:none}
+:where(.app-content) .chart-toolbar{flex-wrap:wrap}
+:where(.app-content) .chart-navigator{flex-wrap:wrap}
+:where(.app-content) .chart-navigator #zoomRange{width:54px}
+.app-content .chart-section{padding-right:0}
+:where(.app-content) .indicators{gap:10px}
+.app-content .session{padding:12px 0}
+.app-content .trade{min-height:74px}
+}
+@media(max-height:800px) and (min-width:1000px){
+:where(.app-content) .top{height:56px}
+:where(.app-content) .session{padding:15px 0}
+:where(.app-content) .balance{gap:8px}
+:where(.app-content) .aside{gap:13px}
+:where(.app-content) .position-state{margin-top:10px;padding:8px 10px}
+:where(.app-content) .trade{min-height:68px}
+:where(.app-content) .hold{min-height:62px}
+:where(.app-content) .chart{min-height:300px;height:calc(100dvh - 278px)}
+:where(.app-content) .session h2{font-size:23px}
+:where(.app-content) .feedback{font-size:var(--font-caption)}
+:where(.app-content) .rule-hint{margin:7px 0}
+:where(.app-content) .history{padding-top:7px}
+:where(.app-content) #workbench{min-height:calc(100dvh - 101px)}
+}
+@media(max-width:1050px){
+:where(.app-content) .main{grid-template-columns:minmax(0,1fr) 270px;gap:18px}
+:where(.app-content) .page{padding:0 18px}
+:where(.app-content) .phase-track{display:none}
+:where(.app-content) .chart-toolbar>.subtle{display:none}
+:where(.app-content) .top{gap:12px}
+:where(.app-content) .top nav{gap:5px}
+}
+@media(max-width:760px){
+:where(.app-content) .page{padding:0 12px}
+:where(.app-content) .top{height:auto;min-height:70px;flex-wrap:wrap;gap:5px;padding:10px 0}
+:where(.app-content) .top h1{font-size:16px;width:100%}
+:where(.app-content) .saved{font-size:var(--font-caption)}
+:where(.app-content) .session{gap:10px;flex-wrap:wrap}
+:where(.app-content) .session h2{font-size:20px}
+:where(.app-content) .stage{font-size:var(--font-caption)}
+:where(.app-content) .session .quiet{margin-left:auto}
+:where(.app-content) .main{display:flex;flex-direction:column;gap:20px}
+:where(.app-content) .chart{height:350px;flex:none;min-height:300px}
+:where(.app-content) .chart-foot{flex-direction:column}
+:where(.app-content) .aside{display:grid;grid-template-columns:1fr;gap:15px}
+:where(.app-content) .balance{gap:9px}
+:where(.app-content) .operate{padding-top:16px}
+:where(.app-content) .start-line{flex-direction:column;align-items:flex-start;gap:12px}
+:where(.app-content) .intro{padding-top:30px}
+:where(.app-content) .intro h2{font-size:28px}
+:where(.app-content) .option-grid{grid-template-columns:1fr 1fr}
+:where(.app-content) .session-row{flex-wrap:wrap;gap:10px}
+:where(.app-content) .review-controls{flex-wrap:wrap}
+:where(.app-content) footer{line-height:1.6;flex-wrap:wrap}
+:where(.app-content) footer>span:last-child{margin-left:0}
+:where(.app-content) .quotes{gap:12px}
+:where(.app-content) .trade{min-height:73px}
+:where(.app-content) .hold{min-height:68px}
+:where(.app-content) .history ol{max-height:200px}
+}
+:where(.app-content) .saved{width:10em;max-width:40%;flex:none;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.app-content) #message:not(:empty){position:fixed;inset:108px 18px auto auto;z-index:15;width:min(560px,calc(100vw - 100px));max-height:min(220px,40dvh);overflow:auto;margin:0;font-size:var(--font-control);line-height:1.6;border:1px solid #645038;box-shadow:0 8px 24px #0006;pointer-events:none}
+:where(.app-content) #message button{pointer-events:auto}
+
+/* Content layout inside the common frame. */
+.app-content .app{display:block;min-height:0}
+.app-content .page{padding:0;min-width:0}
+.app-content .top{height:42px;gap:18px}
+.app-content .top h1{display:none}
+.app-content .top nav{gap:10px}
+.app-content #workbench{min-height:calc(100dvh - 134px)}
+@media(max-width:760px){.app-content .top{min-height:42px;flex-wrap:nowrap;padding:0;gap:4px}}

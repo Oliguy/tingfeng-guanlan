@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tingfeng-guanlan"
+version = "2.0.0"
+description = "听风观澜：独立界面、应用功能与数据合同"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["pypinyin>=0.55,<1", "PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+analysis = ["duckdb>=1.4,<2", "pyarrow>=20,<26", "numpy>=2,<3"]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+guanlan = "guanlan_app.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+guanlan_ui = ["static/*"]
+guanlan_data = ["contracts/*.json", "rules/*.json"]
+"guanlan_domain.observer_math" = ["*.json"]
+"guanlan_data.repositories.stock_profile" = ["*.sql"]
+"guanlan_data.repositories.industry_taxonomy" = ["*.json", "*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

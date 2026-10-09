@@ -1,0 +1,17 @@
+<aside id="settingsPanel" class="settings-panel" role="region" aria-labelledby="settingsTitle" hidden>
+<header><h2 id="settingsTitle">看图设置</h2><button id="closeSettings" aria-label="关闭设置">关闭</button></header>
+<p>行业、ETF、题材与异动共用，修改后自动保存。</p>
+<label for="zoomGesture">K线缩放</label><select id="zoomGesture"><option value="ctrl">Ctrl + 滚轮</option><option value="alt">Alt + 滚轮</option><option value="wheel">直接滚轮</option><option value="off">关闭滚轮缩放</option></select>
+<label for="nextObjectKey">切换下一个 / 上一个对象</label><select id="nextObjectKey"><option value="tab">Tab / Shift + Tab</option><option value="alt-arrow">Alt + ↓ / Alt + ↑</option><option value="page">PageDown / PageUp</option><option value="off">关闭，保留正常 Tab 焦点</option></select>
+<p>按当前筛选、排序后的列表循环切换。输入框、设置栏和弹窗内保留正常按键；Esc 关闭设置。</p>
+<button id="resetShortcuts">恢复默认快捷键</button>
+<div class="settings-note"><h3>辅助线粗细</h3><p>拖动即时预览并保存。粗细与图上勾选均跨行业、ETF、成分股沿用。</p>
+<div class="line-width-control" style="--indicator-color:#f4f6f5"><label for="zhixingWhiteWidth"><i aria-hidden="true"></i>知行白线<output id="zhixingWhiteWidthValue" for="zhixingWhiteWidth"></output></label><input id="zhixingWhiteWidth" type="range"></div>
+<div class="line-width-control" style="--indicator-color:#dfb319"><label for="zhixingYellowWidth"><i aria-hidden="true"></i>知行黄线<output id="zhixingYellowWidthValue" for="zhixingYellowWidth"></output></label><input id="zhixingYellowWidth" type="range"></div>
+<div class="line-width-control" style="--indicator-color:#42b8e8"><label for="thirtyWeekWidth"><i aria-hidden="true"></i>30周线<output id="thirtyWeekWidthValue" for="thirtyWeekWidth"></output></label><input id="thirtyWeekWidth" type="range"></div>
+<div class="line-width-control" style="--indicator-color:#c08cff"><label for="bbiWidth"><i aria-hidden="true"></i>BBI<output id="bbiWidthValue" for="bbiWidth"></output></label><input id="bbiWidth" type="range"></div>
+<button id="resetLineWidths">恢复默认粗细</button>
+<h3>左栏信号</h3><p>近5周站上30周线的周数越多越红，越少越绿；历史不足时不着色。</p>
+<div class="signal-legend" aria-label="站上线周数由0到5，绿到红"><span data-strength="0">0/5</span><span data-strength="1">1/5</span><span data-strength="2">2/5</span><span data-strength="3">3/5</span><span data-strength="4">4/5</span><span data-strength="5">5/5</span></div>
+<p>金色星标表示最近两个交易周的周收盘都高于各自30周线。整周休市跳过；末周按最新已存行情计算。</p></div>
+<div class="settings-note"><h3>股市日历</h3><p id="calendarStatus" role="status">读取本地日历…</p><p id="calendarDates"></p><p id="calendarCoverage"></p><p>默认使用本地日历。更新目标超出覆盖范围时，通过博采归藏续藏；来源未补齐时保留旧数据。</p></div></aside>

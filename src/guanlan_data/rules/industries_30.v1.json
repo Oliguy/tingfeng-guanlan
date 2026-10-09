@@ -1,0 +1,218 @@
+{
+  "version": "trading_industries_30_v1",
+  "sectors": [
+    {
+      "id": "I01",
+      "name": "光通信",
+      "includes": "光芯片、光器件、光模块、光纤光缆及光连接",
+      "excludes": "工业激光用途不得凭光字归入；服务器及电交换机另列"
+    },
+    {
+      "id": "I02",
+      "name": "半导体",
+      "includes": "非存储芯片、通用晶圆代工、封测、半导体专用设备材料",
+      "excludes": "存储产品单列；不因客户生产存储将通用设备代工归存储"
+    },
+    {
+      "id": "I03",
+      "name": "存储",
+      "includes": "存储芯片、专门存储制造、存储控制器、存储模组及产品",
+      "excludes": "通用半导体设备材料及代工不是存储产品；普通经销需标角色"
+    },
+    {
+      "id": "I04",
+      "name": "计算机与网络设备",
+      "includes": "服务器、计算机、交换机、路由器及专用整机",
+      "excludes": "光模块归光通信；一般电子元件单列"
+    },
+    {
+      "id": "I05",
+      "name": "电子元件与消费电子",
+      "includes": "PCB、连接器、电子组件、消费电子制造",
+      "excludes": "不能仅因客户属于AI或核电而归对应行业"
+    },
+    {
+      "id": "I06",
+      "name": "软件与云服务",
+      "includes": "软件、云计算服务、AI应用及网络安全",
+      "excludes": "物理机房出租运营归数据中心"
+    },
+    {
+      "id": "I07",
+      "name": "数据中心配套与运营",
+      "includes": "机房运营、明确用于机房的液冷、供配电和UPS",
+      "excludes": "普通冷却和电力设备无机房业务依据不纳入"
+    },
+    {
+      "id": "I08",
+      "name": "机械装备与机器人",
+      "includes": "机器人、工业自动化、通用和专用机械",
+      "excludes": "已有独立行业的专用设备依实际产品归对应行业；不沿客户行业延伸"
+    },
+    {
+      "id": "I09",
+      "name": "汽车与零部件",
+      "includes": "整车、汽车零部件及智能驾驶",
+      "excludes": "动力电池归电池；普通电子元件不得只因下游汽车重复归类"
+    },
+    {
+      "id": "I10",
+      "name": "航空航天与军工",
+      "includes": "航空航天、卫星、国防装备及低空飞行器",
+      "excludes": "航空运输归交通运输；普通供应商需专用产品依据"
+    },
+    {
+      "id": "I11",
+      "name": "电网与电气设备",
+      "includes": "输配电、电网装备及通用电气设备",
+      "excludes": "电力运营单列；明确机房专用产品另归数据中心"
+    },
+    {
+      "id": "I12",
+      "name": "核电",
+      "includes": "核电及可控核聚变专门设备、材料、服务",
+      "excludes": "可控核聚变是本类范围；通用材料只提客户用途不够"
+    },
+    {
+      "id": "I13",
+      "name": "光伏",
+      "includes": "光伏材料、电池片、组件和专用设备",
+      "excludes": "光伏发电运营归公用事业"
+    },
+    {
+      "id": "I14",
+      "name": "风电",
+      "includes": "风机、风电零部件和专用设备",
+      "excludes": "风力发电运营归公用事业"
+    },
+    {
+      "id": "I15",
+      "name": "电池与储能",
+      "includes": "锂电、固态及其他电池、储能系统和专用材料设备",
+      "excludes": "普通有色资源归有色；不以新能源宽泛概念准入"
+    },
+    {
+      "id": "I16",
+      "name": "煤炭与油气",
+      "includes": "煤炭石油天然气开采加工及相关服务",
+      "excludes": "城市燃气运营归公用事业"
+    },
+    {
+      "id": "I17",
+      "name": "有色金属",
+      "includes": "铜铝黄金稀土等资源、冶炼加工",
+      "excludes": "明确电池专用材料另列；商品ETF不是公司业务"
+    },
+    {
+      "id": "I18",
+      "name": "化工与新材料",
+      "includes": "化工产品和通用新材料",
+      "excludes": "专用产品依已核验实际业务归对应行业，不按所有潜在应用重复归类"
+    },
+    {
+      "id": "I19",
+      "name": "医药",
+      "includes": "创新药、仿制药、中药、生物制药及药物研发生产服务",
+      "excludes": "器械、医疗服务和医药流通另列"
+    },
+    {
+      "id": "I20",
+      "name": "医疗器械与服务",
+      "includes": "医疗器械、诊断、医疗服务和医药流通",
+      "excludes": "药品研发生产归医药"
+    },
+    {
+      "id": "I21",
+      "name": "农林牧渔",
+      "includes": "种业、种植养殖、饲料、林业和相关生产服务",
+      "excludes": "食品加工归食品饮料"
+    },
+    {
+      "id": "I22",
+      "name": "食品饮料",
+      "includes": "食品饮料酒类及烟草相关业务",
+      "excludes": "渠道零售归商贸"
+    },
+    {
+      "id": "I23",
+      "name": "家电与日用消费",
+      "includes": "家电家具、纺织服装、日化、造纸包装等消费制造",
+      "excludes": "消费电子归电子元件与消费电子"
+    },
+    {
+      "id": "I24",
+      "name": "商贸与文娱服务",
+      "includes": "零售电商、旅游酒店、传媒游戏和文娱服务",
+      "excludes": "商品制造与金融服务另列"
+    },
+    {
+      "id": "I25",
+      "name": "银行",
+      "includes": "银行业务",
+      "excludes": "证券保险等非银金融另列"
+    },
+    {
+      "id": "I26",
+      "name": "非银金融",
+      "includes": "券商保险信托租赁及其他金融服务",
+      "excludes": "银行另列；产业公司仅参股金融不自动归入"
+    },
+    {
+      "id": "I27",
+      "name": "公用事业",
+      "includes": "电力热力水务城市燃气运营及环保服务",
+      "excludes": "设备制造另归实际设备行业"
+    },
+    {
+      "id": "I28",
+      "name": "交通运输与物流",
+      "includes": "航运港口航空铁路公路运输及物流",
+      "excludes": "运输设备制造归对应装备行业"
+    },
+    {
+      "id": "I29",
+      "name": "地产与建筑",
+      "includes": "地产开发物业、建筑施工工程设计装饰",
+      "excludes": "建材制造另列；机房实际运营另列"
+    },
+    {
+      "id": "I30",
+      "name": "钢铁与建材",
+      "includes": "钢铁水泥玻璃和通用建筑材料",
+      "excludes": "专门电子光学材料按实际产品核验"
+    }
+  ],
+  "pure_threshold": 0.9,
+  "actual_stages": [
+    "commercial_sales",
+    "delivered",
+    "in_use"
+  ],
+  "non_actual_stages": [
+    "research",
+    "sample",
+    "intention",
+    "investment",
+    "unknown"
+  ],
+  "roles": [
+    "designer",
+    "manufacturer",
+    "integrator",
+    "distributor",
+    "operator",
+    "service",
+    "investor",
+    "unknown"
+  ],
+  "invariants": [
+    "facts_before_classification",
+    "no_price_based_admission",
+    "no_customer_industry_propagation",
+    "same_business_aliases_not_hybrid",
+    "unknown_not_zero",
+    "no_parent_child_revenue_double_count",
+    "same_period_currency_consolidation_denominator",
+    "one_fact_multiple_quotes_not_independent_evidence"
+  ]
+}

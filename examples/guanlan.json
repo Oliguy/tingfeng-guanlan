@@ -1,0 +1,15 @@
+{
+  "schema_version": "guanlan.config.v1",
+  "paths": {
+    "market_root": "../my-data",
+    "state_root": "../my-guanlan-state"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 18738,
+    "token_env": "GUANLAN_ACCESS_TOKEN"
+  },
+  "provider": {
+    "enabled": false
+  }
+}

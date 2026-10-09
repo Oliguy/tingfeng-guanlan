@@ -1,0 +1,293 @@
+/* Module rules stay inside app-content; shared tokens live in shell.css. */
+:where(.app-content) button{cursor:pointer;background:#20252c;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
+:where(.app-content) button:hover{background:#2c333d}
+:where(.app-content) button:disabled{cursor:wait;opacity:.55}
+:where(.app-content) button.active,:where(.app-content) button[aria-selected=true]{color:#d3e5fd;border-color:#526b87;background:var(--selected)}
+:where(.app-content) button:focus-visible,:where(.app-content) a:focus-visible,:where(.app-content) input:focus-visible,:where(.app-content) select:focus-visible,:where(.app-content) [tabindex]:focus-visible{outline:2px solid #b9d4f8;outline-offset:2px}
+:where(.app-content) .primary{background:#dce9df;color:#102317;border-color:#dce9df;font-weight:700}
+:where(.app-content) .primary:hover{background:white}
+:where(.app-content) input,:where(.app-content) select{background:#14181e;border:1px solid #3a4451;border-radius:5px;color:var(--text);padding:7px}
+:where(.app-content) input::placeholder{color:var(--muted)}
+:where(.app-content) a{color:#94cde6;text-underline-offset:3px}
+:where(.app-content) ::selection{background:#455973;color:#fff}
+:where(.app-content) .workspace{display:grid;overflow:hidden}
+:where(.app-content) .objects-hidden .objects{display:none}
+:where(.app-content) .objects{min-height:0;display:flex;flex-direction:column;padding:16px 12px;border-right:1px solid var(--line);background:var(--panel);gap:10px}
+:where(.app-content) .objects header{display:flex;align-items:center;justify-content:space-between}
+:where(.app-content) .objects h1{font-size:16px;margin:0}
+:where(.app-content) .objects header button{font-size:var(--font-caption)}
+:where(.app-content) .object-list{overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#4e5864 transparent}
+:where(.app-content) .object-list h3{font-size:var(--font-control);color:var(--muted);margin:16px 0 8px}
+:where(.app-content) .object-row{width:100%;text-align:left;display:block;margin-bottom:6px;padding:10px;background:#19251e;line-height:1.6}
+:where(.app-content) .object-row.selected{outline:1px solid var(--gold);border-color:var(--gold)}
+:where(.app-content) .object-row strong{font-size:var(--font-body)}
+:where(.app-content) .object-row .row-top{display:flex;justify-content:space-between;gap:8px}
+:where(.app-content) .object-row small{display:block;color:#b2beb6;font-size:var(--font-caption)}
+:where(.app-content) .signal-bits{display:flex;gap:6px;flex-wrap:wrap;font-size:var(--font-caption);color:#cad5cd}
+:where(.app-content) .main{min-height:0;min-width:0;overflow:auto;display:flex;flex-direction:column;padding:0 18px 12px}
+:where(.app-content) .global{flex:none;display:flex;align-items:center;gap:10px;min-height:55px;border-bottom:1px solid var(--line)}
+:where(.app-content) .global #freshness{flex:1;color:var(--muted);font-size:var(--font-caption)}
+:where(.app-content) .global>div{display:flex;gap:6px}
+:where(.app-content) .instrument{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:98px;padding:10px 0;flex:none}
+:where(.app-content) .instrument h2{font-size:23px;line-height:1.3;margin:6px 0}
+:where(.app-content) .instrument p{margin:0;color:var(--muted);font-size:var(--font-caption)}
+:where(.app-content) .instrument code{color:var(--gold);margin-right:10px}
+:where(.app-content) .breadcrumb{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:var(--font-control)}
+:where(.app-content) .breadcrumb button{padding:4px 8px}
+:where(.app-content) .instrument-right{display:flex;align-items:flex-end;flex-direction:column;gap:5px;max-width:43%;font-size:var(--font-caption);color:var(--muted)}
+:where(.app-content) .instrument-right b{font-size:17px;color:var(--red)}
+:where(.app-content) .chart-area{display:flex;flex-direction:column;flex:1;min-height:260px;border:0;border-radius:0;padding:10px 0;background:var(--bg)}
+:where(.app-content) .chart-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:var(--font-caption)}
+:where(.app-content) .chart-tools button{padding:5px 7px;font-size:var(--font-caption)}
+:where(.app-content) .layers{display:flex;gap:8px;align-items:center;flex:1;min-width:215px}
+:where(.app-content) .layers label{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap}
+:where(.app-content) .layers input{accent-color:var(--gold);margin:0}
+:where(.app-content) .layers i{width:14px;border-top:2px solid #42b8e8}
+:where(.app-content) .layers i.purple{border-color:#c08cff}
+:where(.app-content) .layers .pair{height:6px;border-top:2px solid #f4f6f5;border-bottom:2px solid #dfb319}
+:where(.app-content) #volumeMode{font-size:var(--font-caption);padding:4px;max-width:155px}
+:where(.app-content) .quotes{display:flex;flex-wrap:wrap;gap:13px;padding:9px 0;font-size:var(--font-caption);color:var(--muted);font-variant-numeric:tabular-nums}
+:where(.app-content) .quotes b{color:var(--text)}
+:where(.app-content) .positive{color:var(--red)!important}
+:where(.app-content) .negative{color:var(--green)!important}
+:where(.app-content) .canvas-wrap{position:relative;flex:1;min-height:145px;overflow:hidden}
+:where(.app-content) .canvas-wrap canvas{display:block;width:100%;height:100%}
+:where(.app-content) #chartOverlay{position:absolute;inset:0;cursor:grab;touch-action:none}
+:where(.app-content) #chartOverlay.dragging{cursor:grabbing}
+:where(.app-content) #chartTooltip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid #526173;border-radius:6px;padding:9px;z-index:3;font-size:var(--font-caption);line-height:1.8;white-space:nowrap}
+:where(.app-content) #chartEmpty{position:absolute;inset:25%;text-align:center;color:var(--muted);pointer-events:none}
+:where(.app-content) .tip-white{color:#f4f6f5}
+:where(.app-content) .tip-yellow{color:#dfb319}
+:where(.app-content) .tip-ma30{color:#42b8e8}
+:where(.app-content) .tip-bbi{color:#c08cff}
+:where(.app-content) .navigator{display:flex;align-items:center;gap:6px;padding-top:6px;border-top:1px solid var(--line);font-size:var(--font-caption);flex:none}
+:where(.app-content) .navigator button{padding:4px 8px}
+:where(.app-content) .navigator input{padding:0;accent-color:var(--red)}
+:where(.app-content) #timelineRange{flex:1;min-width:40px}
+:where(.app-content) .navigator label{display:flex;align-items:center;gap:4px}
+:where(.app-content) .navigator label input{width:65px}
+:where(.app-content) .method{font-size:var(--font-caption);color:var(--muted);margin:6px 0 0;line-height:1.5;max-height:32px;overflow:auto}
+:where(.app-content) .details{height:var(--details-height,240px);flex:none;min-height:42px;margin-top:5px;display:flex;flex-direction:column}
+:where(.app-content) .details.collapsed{height:42px}
+:where(.app-content) .resize-bar{height:7px;cursor:ns-resize;flex:none;border-top:1px solid var(--line);touch-action:none}
+:where(.app-content) .details>header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex:none}
+:where(.app-content) .tabs{display:flex;gap:6px}
+:where(.app-content) .tabs button{border-radius:5px 5px 0 0}
+:where(.app-content) .detail-content{min-height:0;flex:1;overflow:auto;padding-top:8px;scrollbar-width:thin}
+:where(.app-content) .member-tools{display:flex;gap:10px;align-items:center;margin-bottom:8px;font-size:var(--font-caption)}
+:where(.app-content) .member-tools span{flex:1;color:var(--muted)}
+:where(.app-content) .member-tools input{width:160px}
+:where(.app-content) .table-wrap{overflow:auto}
+:where(.app-content) table{border-collapse:collapse;width:100%;font-size:var(--font-control);white-space:nowrap;font-variant-numeric:tabular-nums}
+:where(.app-content) th,:where(.app-content) td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+:where(.app-content) th{color:var(--muted);font-weight:500;position:sticky;top:0;background:var(--panel)}
+:where(.app-content) tr[data-stock],:where(.app-content) tr[data-etf]{cursor:pointer}
+:where(.app-content) tr:hover td{background:#202831}
+:where(.app-content) tr.selected td{color:var(--gold);background:#25323f}
+:where(.app-content) .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line)}
+:where(.app-content) .metric-grid>div{background:var(--bg);padding:10px}
+:where(.app-content) .metric-grid span{display:block;color:var(--muted);font-size:var(--font-caption);margin-bottom:5px}
+:where(.app-content) .metric-grid b{font-size:var(--font-label)}
+:where(.app-content) .info{color:var(--muted);font-size:var(--font-control);line-height:1.8}
+:where(.app-content) .info summary{cursor:pointer;color:var(--text)}
+:where(.app-content) dialog{width:min(760px,94vw);max-height:85vh;background:var(--panel);color:var(--text);border:1px solid #49586b;border-radius:12px;padding:22px}
+:where(.app-content) dialog::backdrop{background:#0009}
+:where(.app-content) dialog header{display:flex;justify-content:space-between;align-items:center}
+:where(.app-content) dialog h2{font-size:20px;margin:0}
+:where(.app-content) dialog p{font-size:var(--font-control);line-height:1.8;color:var(--muted)}
+:where(.app-content) .update-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+:where(.app-content) dialog details{border-block:1px solid var(--line);padding:12px 0}
+:where(.app-content) dialog summary{cursor:pointer}
+:where(.app-content) dialog input{margin:4px;width:140px}
+:where(.app-content) .job{border-top:1px solid var(--line);padding:15px 0;font-size:var(--font-control)}
+:where(.app-content) .job h3{font-size:var(--font-label);margin:0 0 8px}
+:where(.app-content) .job-stage{padding:5px 0;color:var(--muted);overflow-wrap:anywhere}
+:where(.app-content) .job button{margin-right:8px;margin-top:8px}
+:where(.app-content) #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 18px;background:var(--selected);border:1px solid #61748a;z-index:8;max-width:90vw;display:none}
+:where(.app-content) #toast.show{display:block}
+@media(max-width:1150px){
+:where(.app-content) .main{padding-inline:10px}
+:where(.app-content) #viewWindow{display:none}
+:where(.app-content) .instrument h2{font-size:20px}
+:where(.app-content) .metric-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:820px){
+:where(.app-content) .objects{position:fixed;z-index:5;box-shadow:10px 15px 35px #0008}
+:where(.app-content) .global{flex-wrap:wrap;gap:6px;padding-block:8px}
+:where(.app-content) .global #freshness{display:none}
+:where(.app-content) .global>div{margin-left:auto}
+:where(.app-content) .instrument{min-height:95px;align-items:flex-start}
+:where(.app-content) .instrument h2{font-size:18px}
+:where(.app-content) .instrument-right{font-size:var(--font-caption)}
+:where(.app-content) .instrument-right b{font-size:var(--font-body)}
+:where(.app-content) .chart-tools{gap:5px}
+:where(.app-content) .layers{order:3;flex-basis:100%}
+:where(.app-content) .quotes>span:nth-of-type(3),:where(.app-content) .quotes>span:nth-of-type(4){display:none}
+:where(.app-content) .navigator label{display:none}
+:where(.app-content) .member-tools{flex-wrap:wrap;gap:5px}
+:where(.app-content) .member-tools span{flex-basis:100%}
+:where(.app-content) .member-tools input{flex:1;min-width:70px}
+:where(.app-content) .member-tools select{max-width:105px}
+:where(.app-content) .details{height:210px}
+:where(.app-content) .metric-grid{grid-template-columns:repeat(2,1fr)}
+:where(.app-content) .chart-area{padding:8px;min-height:230px}
+:where(.app-content) button{padding:7px}
+:where(.app-content) .tabs{gap:3px}
+:where(.app-content) .global button{font-size:var(--font-caption)}
+}
+@media(max-height:760px){
+:where(.app-content) .details{height:min(var(--details-height,190px),30vh)}
+:where(.app-content) .instrument{min-height:75px}
+:where(.app-content) .instrument h2{font-size:19px}
+:where(.app-content) .method{max-height:15px}
+:where(.app-content) .chart-area{min-height:225px}
+:where(.app-content) .details.collapsed{height:42px}
+}
+:where(.app-content) .object-row{background:var(--signal-bg,#1b211e)}
+:where(.app-content) .object-row:hover{background:var(--signal-bg,#1b211e);box-shadow:inset 0 0 0 1px #95a59a}
+:where(.app-content) .object-row .row-top>span{flex:none}
+:where(.app-content) .object-row .row-top strong{min-width:0}
+:where(.app-content) .candle-summary{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;min-height:27px;padding:2px 0 7px;color:var(--muted);font-size:var(--font-caption);font-variant-numeric:tabular-nums}
+:where(.app-content) .candle-summary b{font-size:var(--font-control);font-weight:600;color:var(--text)}
+:where(.app-content) .candle-summary small{font-size:var(--font-tiny);max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.app-content) .candle-help{margin-left:auto;font-size:var(--font-tiny);color:#89989f}
+:where(.app-content) .weekly-streak{display:block;font-size:var(--font-control);color:var(--text);font-variant-numeric:tabular-nums}
+:where(.app-content) .weekly-streak b{font-weight:650}
+:where(.app-content) .gold-badge{display:inline-flex;vertical-align:middle;align-items:center;margin-left:6px}
+:where(.app-content) .gold-badge svg{width:14px;height:14px;fill:var(--gold);stroke:#ffe6a3;stroke-width:.7}
+@media(max-width:820px){
+:where(.app-content) .global{column-gap:4px}
+:where(.app-content) .global>div{gap:4px}
+:where(.app-content) .global button{padding-inline:6px}
+}
+:where(.app-content) .object-node{position:relative;margin-left:calc(var(--tree-depth)*14px)}
+:where(.app-content) .object-node .object-row{width:100%;padding-left:27px}
+:where(.app-content) .tree-toggle{position:absolute;z-index:1;top:9px;left:2px;border:0;background:transparent;padding:3px;color:#a6c7cc;min-width:23px;font-size:17px}
+:where(.app-content) .object-node[style*="depth:1"] .object-row{font-size:var(--font-control)}
+:where(.app-content) .member-tag{display:inline-block;padding:2px 6px;margin:2px 4px 2px 0;border:1px solid #35505d;border-radius:4px;background:#142a34;color:#b3d3de;font-size:var(--font-caption);white-space:normal}
+:where(.app-content) .tag-cell{min-width:160px;max-width:300px;white-space:normal}
+:where(.app-content) .member-tools{flex-wrap:wrap}
+:where(.app-content) .member-tools #memberTag{max-width:260px}
+:where(.app-content) #manageThemes{margin:0 14px 12px;text-align:center}
+:where(.app-content) .themes-dialog{width:min(1050px,94vw);max-height:90vh}
+:where(.app-content) .theme-manager{display:grid;grid-template-columns:210px 1fr;gap:20px}
+:where(.app-content) .theme-manager aside{border-right:1px solid #31434e;padding-right:14px}
+:where(.app-content) .theme-manager aside button{display:block;width:100%;text-align:left;margin-bottom:8px}
+:where(.app-content) .theme-manager label{display:block;margin:10px 0;color:#bbccd2}
+:where(.app-content) .theme-manager input,:where(.app-content) .theme-manager textarea{display:block;width:100%;margin-top:5px;background:#101b23;color:#dbe6e9;border:1px solid #39505d;border-radius:5px;padding:8px;box-sizing:border-box}
+:where(.app-content) .theme-manager textarea{resize:vertical;line-height:1.7}
+:where(.app-content) .theme-actions{display:flex;gap:8px;flex-wrap:wrap}
+:where(.app-content) .theme-manager pre{white-space:pre-wrap;line-height:1.7;color:#b7d5d6}
+@media(max-width:820px){
+:where(.app-content) .theme-manager{grid-template-columns:1fr}
+:where(.app-content) .theme-manager aside{border:0;max-height:140px;overflow:auto}
+}
+:where(.app-content) .objects{padding:20px 12px 0;gap:12px}
+:where(.app-content) .objects header{gap:8px;padding:0 4px}
+:where(.app-content) .objects header #directoryCount{font-size:var(--font-caption);color:var(--muted);margin-left:auto}
+:where(.app-content) .objects header #hideObjects{padding:4px;font-size:var(--font-caption);background:none;border:0;color:var(--muted)}
+:where(.app-content) .directory-modes{display:flex;gap:3px;background:#101419;border:1px solid var(--line);border-radius:6px;padding:3px}
+:where(.app-content) .directory-modes button{flex:1;border:0;background:none;font-size:var(--font-control)}
+:where(.app-content) .directory-modes button[aria-pressed=true]{background:#303944;color:#f1f5fa}
+:where(.app-content) #objectSearch{font-size:var(--font-control);min-height:36px;background:transparent;border-color:var(--line)}
+:where(.app-content) .family-filters{display:flex;flex-wrap:wrap;gap:2px}
+:where(.app-content) .family-filters button{font-size:var(--font-caption);padding:5px 7px;background:none;border:0;color:var(--muted)}
+:where(.app-content) .family-filters button[aria-pressed=true]{background:var(--selected);color:#c2d9f8}
+:where(.app-content) .directory-columns,:where(.app-content) .object-row{display:grid;grid-template-columns:minmax(0,1fr) 36px 43px 60px;column-gap:6px;align-items:center}
+:where(.app-content) .directory-columns{padding:0 8px;color:var(--muted);font-size:var(--font-caption)}
+:where(.app-content) .directory-columns>span:not(:first-child){text-align:right}
+:where(.app-content) .object-list{flex:1;margin-top:-4px}
+:where(.app-content) .object-list .object-row{height:36px;margin:1px 0;padding:0 8px;border:1px solid transparent;border-radius:4px;background:transparent;font-size:var(--font-control);line-height:1.4}
+:where(.app-content) .object-list .object-row:hover{background:#202831;box-shadow:none}
+:where(.app-content) .object-list .object-row.selected{outline:0;border-color:#596f88;background:#25323f}
+:where(.app-content) .object-name{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+:where(.app-content) .object-row .gold-badge{margin-left:4px}
+:where(.app-content) .object-row .gold-badge svg{width:11px;height:11px}
+:where(.app-content) .object-row .strength-chip{justify-self:end}
+:where(.app-content) .row-change,:where(.app-content) .streak-value{text-align:right;font-variant-numeric:tabular-nums;font-size:var(--font-caption)}
+:where(.app-content) .streak-value{color:var(--muted)}
+:where(.app-content) .strength-chip{display:inline-block;min-width:30px;padding:2px 4px;text-align:center;font-variant-numeric:tabular-nums;font-size:var(--font-caption);background:var(--signal-bg,#303741);color:#e9eff0;border-radius:3px}
+:where(.app-content) .directory-group{margin-bottom:12px}
+:where(.app-content) .directory-group h3{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:12px 8px 6px;margin:0;font-weight:400;font-size:var(--font-caption)}
+:where(.app-content) .directory-group h3 button{border:0;background:none;padding:0;color:var(--muted);font-size:var(--font-caption);text-align:left}
+:where(.app-content) .directory-group h3 button:hover{color:var(--text)}
+:where(.app-content) .directory-legend{display:flex;justify-content:center;align-items:center;gap:3px;padding:11px 0;font-size:var(--font-caption);color:var(--muted);border-top:1px solid var(--line)}
+:where(.app-content) .directory-legend span{background:var(--signal-bg);padding:2px 3px;color:#e9eff0}
+:where(.app-content) .sibling-navigation{display:flex;align-items:center;gap:5px;overflow:auto;flex:none;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
+:where(.app-content) .sibling-navigation>span{color:var(--muted);font-size:var(--font-caption);white-space:nowrap;margin-right:6px}
+:where(.app-content) .sibling-navigation button{white-space:nowrap;font-size:var(--font-control);background:none;border:0;padding:7px 10px}
+:where(.app-content) .sibling-navigation button[aria-pressed=true]{background:var(--selected);color:#c2d9f8}
+:where(.app-content) .instrument h2{font-weight:600}
+:where(.app-content) .instrument code{color:var(--muted)}
+:where(.app-content) .instrument-right b{font-weight:500}
+:where(.app-content) #latestClose{font-size:21px;font-weight:500}
+:where(.app-content) .quotes{align-items:baseline}
+:where(.app-content) .member-tools{gap:6px}
+:where(.app-content) .member-tools #memberTitle{flex:1 1 150px;font-size:var(--font-control)}
+:where(.app-content) .member-tools select{font-size:var(--font-caption);max-width:230px}
+:where(.app-content) .member-tools input{font-size:var(--font-caption);flex:1;max-width:220px}
+:where(.app-content) .member-signal-status{font-size:var(--font-caption);color:var(--muted);margin:0 0 8px;min-height:15px}
+:where(.app-content) .member-signal-status:empty{display:none}
+:where(.app-content) #memberTable th{font-size:var(--font-caption)}
+:where(.app-content) #memberTable td{padding-block:8px}
+:where(.app-content) #memberTable .gold-badge svg{width:12px;height:12px}
+:where(.app-content) .details .tabs button{background:none;border-color:transparent;color:var(--muted)}
+:where(.app-content) .details .tabs button[aria-selected=true]{color:#d3e5fd;border-color:#526b87;background:var(--selected)}
+:where(.app-content) .empty{padding:12px 8px;color:var(--muted)}
+@media(min-width:821px) and (max-height:850px){
+:where(.app-content) .instrument{min-height:82px;padding-block:8px}
+:where(.app-content) .instrument h2{font-size:21px}
+:where(.app-content) .details:not(.collapsed){height:min(var(--details-height,240px),220px)}
+:where(.app-content) .method{max-height:17px}
+:where(.app-content) .global{min-height:49px}
+:where(.app-content) .sibling-navigation{padding-bottom:6px}
+:where(.app-content) .sibling-navigation button{padding:5px 9px}
+:where(.app-content) .main{padding-bottom:8px}
+:where(.app-content) .chart-area{min-height:280px}
+}
+@media(max-width:820px){
+:where(.app-content) .objects{width:min(340px,calc(100vw - 54px));top:54px}
+:where(.app-content) .member-tools select{max-width:180px}
+:where(.app-content) .member-tools input{max-width:none}
+:where(.app-content) .instrument-right{max-width:44%}
+:where(.app-content) .sibling-navigation{padding-bottom:6px}
+:where(.app-content) .instrument-right b{font-size:var(--font-control)}
+:where(.app-content) .details{min-height:215px}
+:where(.app-content) .details.collapsed{min-height:42px}
+:where(.app-content) .chart-area{min-height:290px}
+:where(.app-content) .main{padding-bottom:12px}
+:where(.app-content) .objects header{padding-inline:0}
+}
+:where(.app-content) .navigator input{accent-color:#91a9c5}
+:where(.app-content) .layers input{accent-color:#b8c8df}
+:where(.app-content) #retryMemberSignals{font-size:var(--font-caption);margin-bottom:6px}
+@media(min-width:1151px){
+:where(.app-content) .member-tools input{max-width:180px}
+:where(.app-content) .member-tools #memberTitle{min-width:125px}
+}
+@media(max-width:820px){
+:where(.app-content) .member-tools #memberTitle{flex-basis:100%}
+:where(.app-content) .details:not(.collapsed){height:max(var(--details-height,330px),330px);min-height:330px}
+:where(.app-content) .instrument{flex-wrap:wrap;gap:8px}
+:where(.app-content) .instrument-right{max-width:none;width:100%;align-items:flex-start;flex-direction:row;flex-wrap:wrap;gap:4px 10px}
+:where(.app-content) .instrument-right b{flex-basis:100%}
+:where(.app-content) .instrument p{line-height:1.7}
+:where(.app-content) .main{overflow:auto}
+:where(.app-content) .member-tools select{flex:1;max-width:none;min-width:130px}
+}
+@media(max-width:820px){
+:where(.app-content) .chart-area{flex:none;height:440px;min-height:440px}
+:where(.app-content) .canvas-wrap{min-height:145px}
+}
+:where(.app-content) #memberTable .product-header{width:40%;min-width:230px}
+:where(.app-content) #memberTable .product-cell{min-width:230px;max-width:440px;white-space:normal;vertical-align:middle}
+:where(.app-content) #memberTable .product-copy{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.5;overflow-wrap:anywhere;color:#bccbd9;font-size:var(--font-caption)}
+
+/* Content layout inside the common frame. */
+.app-content .workspace{height:100%;grid-template-columns:320px minmax(0,1fr);overflow:hidden}
+.app-content .workspace.objects-hidden{grid-template-columns:minmax(0,1fr)}
+.app-content .workspace>.main{padding:0 0 0 18px}
+.app-content .objects{padding:12px 10px 10px 0;background:transparent}
+.app-content .global{min-height:46px}
+@media(max-width:1150px){.app-content .workspace{grid-template-columns:280px minmax(0,1fr)}}
+@media(max-width:820px){.app-content .workspace,.app-content .workspace.objects-hidden{grid-template-columns:minmax(0,1fr)}.app-content .workspace>.main{padding:0}.app-content .objects{left:var(--app-rail-width);top:var(--app-header-height);bottom:var(--app-footer-height);width:270px;padding:12px;background:var(--panel)}}

@@ -1,0 +1,57 @@
+.candle-details-page {
+  height: auto;
+  min-height: 100vh;
+  background: #171e23;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow: auto;
+}
+.candle-details-page header {
+  padding: 9px 10px 7px;
+  border-bottom: 1px solid #35434b;
+}
+.candle-details-page h1 {
+  margin: 0 0 3px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.candle-details-page header p {
+  margin: 0;
+  color: #a5b6c0;
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.candle-details-page main { padding: 8px 10px; }
+.detail-metrics { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.detail-metrics > div { display: flex; align-items: baseline; gap: 5px; }
+.detail-metrics span { color: #9aadb6; font-size: 11px; }
+.detail-metrics strong {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+#detailValues {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 4px 7px;
+  margin: 8px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+#detailValues dt { color: #9aacb5; white-space: nowrap; }
+#detailValues dt small { font-size: 10px; }
+#detailValues dt.tip-white { color: #f4f6f5; }
+#detailValues dt.tip-yellow { color: #dfb319; }
+#detailValues dt.tip-ma30 { color: #42b8e8; }
+#detailValues dt.tip-bbi { color: #c08cff; }
+#detailValues dd {
+  margin: 0;
+  text-align: right;
+  color: #e5edf0;
+  white-space: nowrap;
+}
+@media (max-width: 285px) {
+  #detailValues { grid-template-columns: auto minmax(0, 1fr); }
+}
