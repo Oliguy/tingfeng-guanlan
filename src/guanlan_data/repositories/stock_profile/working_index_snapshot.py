@@ -10,6 +10,7 @@ import json
 import re
 import threading
 from pathlib import Path
+from guanlan_data.repositories.industry_index.config import classification_root
 from guanlan_data.repositories.stock_profile.store import sha
 
 SCHEMA = 'industry.root.working.v1'
@@ -21,7 +22,7 @@ def stamp(path):
     return (str(path), stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
 
 def read(db, rules):
-    root = Path(db).resolve().parent / 'classification_working'
+    root = classification_root(db)
     pointer = root / 'root_current.json'
     if not pointer.exists(): return None
     ref = json.loads(pointer.read_text('utf-8'))

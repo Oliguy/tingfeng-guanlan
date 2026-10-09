@@ -18,6 +18,16 @@ LEADER_MIN_HISTORY_WEEKS = 60
 AGGREGATE_RULE_VERSION = observer_data.RULE_VERSION
 DISPLAY_GAP_THRESHOLD = 0.2
 
+def mapped_quote_leader(conn, group_id):
+    """An explicitly mapped quote candidate, never a promoted monthly leader."""
+    row=conn.execute("""SELECT m.etf_code,e.fund_name,e.tracking_index_name,
+        m.group_id FROM etf_group_membership m JOIN etf_master e USING(etf_code)
+        JOIN etf_daily d ON d.etf_code=m.etf_code
+          AND d.trade_date=(SELECT MAX(trade_date) FROM etf_daily WHERE etf_code=m.etf_code)
+        WHERE m.group_id=? AND m.status='active' ORDER BY d.trade_date DESC,d.amount DESC,m.etf_code LIMIT 1""",(group_id,)).fetchone()
+    return {**dict(row),'selection_kind':'mapped_quote','selection_reason':'当月正式龙头缺失，展示当前映射ETF行情'} if row else None
+
+
 def load_latest_stock_returns(*args, **kwargs):
     from guanlan_data.market import load_latest_stock_returns as load
     return load(*args, **kwargs)
@@ -192,6 +202,7 @@ class ObserverReadRepository:
                 latest_day = conn.execute('SELECT max(trade_date) FROM etf_daily').fetchone()[0]
             leader_month = latest_day[:7] if latest_day else date.today().strftime('%Y-%m')
             leader = conn.execute('SELECT l.*,m.fund_name,m.tracking_index_name FROM monthly_leaders l\n                   JOIN etf_master m ON m.etf_code=l.etf_code\n                   WHERE l.group_id=? AND l.leader_month=? AND l.is_current=1 LIMIT 1', (group_id, leader_month)).fetchone()
+            leader = leader or mapped_quote_leader(conn,group_id)
             leader_code = leader['etf_code'] if leader else None
             bars_raw = []
             holdings = []

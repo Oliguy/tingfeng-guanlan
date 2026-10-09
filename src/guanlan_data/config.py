@@ -18,7 +18,7 @@ class Configuration:
 
     @property
     def protected(self):
-        return ([self.paths[k] for k in ('market_root','business_db','support_db','calendar_root','analysis_root')]
+        return ([self.paths[k] for k in ('market_root','business_db','classification_root','support_db','calendar_root','analysis_root')]
                 +[resolve_data_path(self.path('storage_root'),'market_etf/industry_etf_observer.sqlite'),
                   resolve_data_path(self.path('storage_root'),'stable_basis'),
                   resolve_data_path(self.path('storage_root'),'zhixing'),
@@ -52,7 +52,7 @@ def load(path,*,ui_data_override=None):
             new=Path(overlay['storage_root']).expanduser()
             if not new.is_absolute():raise ValueError('总数据目录须为绝对路径')
             if new.resolve()!=old:
-                for k in ('market_root','business_db','support_db','collection_root','calendar_root','analysis_root'):configured.pop(k,None)
+                for k in ('market_root','business_db','classification_root','support_db','collection_root','calendar_root','analysis_root'):configured.pop(k,None)
             configured['storage_root']=str(new)
         for k in ('state_root','training_db'):
             if overlay[k]:
@@ -69,6 +69,7 @@ def load(path,*,ui_data_override=None):
     state=resolve(configured.get('state_root','state'))
     defaults={'storage_root':storage,'market_root':market,'state_root':state,
         'business_db':resolve_data_path(storage,'classification/business.sqlite'),
+        'classification_root':(resolve(configured['business_db']) if 'business_db' in configured else resolve_data_path(storage,'classification/business.sqlite')).parent/'classification_working',
         'support_db':resolve_data_path(storage,'industry/support.sqlite'),
         'collection_root':resolve_data_path(storage,'industry/collections') if grouped else state/'collections',
         'calendar_root':resolve_data_path(storage,'observer_calendar'),
@@ -82,7 +83,7 @@ def load(path,*,ui_data_override=None):
     # Writable databases are never an alias of a source database.
     for role in ('training_db','jobs_root'):
         if not paths[role].is_relative_to(state): raise ValueError(role+' 必须位于 state_root')
-    for role in ('business_db','support_db','calendar_root','analysis_root'):
+    for role in ('business_db','classification_root','support_db','calendar_root','analysis_root'):
         if paths[role].is_relative_to(state):raise ValueError(role+' 必须与可写状态分开')
     setting_path=settings_file(file,raw)
     if any(setting_path.is_relative_to(p) for p in (market,paths['business_db'],paths['support_db'],paths['analysis_root'])):

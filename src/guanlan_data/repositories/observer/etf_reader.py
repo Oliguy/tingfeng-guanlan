@@ -30,7 +30,7 @@ class DailyBars:
     def __init__(self,data_root):
         self.path=resolve_data_path(Path(data_root),'market_etf/industry_etf_observer.sqlite')
 
-    def read(self,codes):
+    def read(self,codes,*,complete=False):
         unique=sorted({c for c in codes if c})
         if len(unique)>200:raise ValueError('ETF列表超出只读批量接口上限')
         result={}
@@ -44,9 +44,14 @@ class DailyBars:
             if not {'etf_code',*BAR_FIELDS}<=fields:
                 raise ValueError('ETF行情字段不符合只读接口v1')
             for code in unique:
-                rows=conn.execute('SELECT '+','.join(BAR_FIELDS)+' FROM etf_daily WHERE etf_code=? ORDER BY trade_date DESC LIMIT 400',(code,))
+                rows=conn.execute('SELECT '+','.join(BAR_FIELDS)+' FROM etf_daily WHERE etf_code=? ORDER BY trade_date DESC'+('' if complete else ' LIMIT 400'),(code,))
                 result[code]=list(reversed([dict(r) for r in rows]))
         return result
+
+    def history(self,code,end):
+        with closing(database.connect(self.path.resolve().as_uri()+'?mode=ro',uri=True)) as c:
+            c.row_factory=sqlite3.Row;c.execute('PRAGMA query_only=ON')
+            return [dict(r) for r in c.execute('SELECT '+','.join(BAR_FIELDS)+' FROM etf_daily WHERE etf_code=? AND trade_date<=? ORDER BY trade_date',(code,end))]
 
 
 class EtfReader:
@@ -147,7 +152,8 @@ class EtfReader:
                     if self.cache and self.cache[0]==key:signals=self.cache[1]
                     else:
                         codes={r.get('leader_etf_code') or r.get('etf_code') for r in rows}
-                        signals={code:view.signal('etf',code,result.get('as_of')) if code else unavailable('暂无ETF行情') for code in codes}
+                        histories=self.bars.read([c for c in codes if c],complete=True)
+                        signals={code:etf_pair(histories.get(code,[]),calendar) if code else unavailable('暂无ETF行情') for code in codes}
                         check=self.read({'view':'summary','if_revision':revision})
                         if not check.get('not_modified') or check['data_revision']!=revision:continue
                         view.assert_unchanged();self.cache=(key,signals)
@@ -159,24 +165,17 @@ class EtfReader:
                     code=(result.get('leader') or {}).get('etf_code') or (result.get('etf') or {}).get('etf_code')
                     bars=result.get('chart_bars',[]);mode=params.get('price_mode','adjusted')
                     if code and bars:
-                        end=result.get('price_date') or bars[-1]['trade_date'];start=bars[0].get('period_start') or bars[0]['trade_date']
-                        if params.get('period','daily')=='weekly':
-                            weekly=view.weekly_bars('etf',code,year_before(start),end,mode)
-                            calculated=apply_overlays(weekly,{r['trade_date']:r.get('thirty_week_ma') for r in weekly})
-                            calculated=enrich(calculated,'weekly',calendar)
-                            old={week_key(r['trade_date']):r for r in bars}
-                            result['chart_bars']=[{**old.get(r['week_start'],{}),**r} for r in calculated if r['week_start']>=week_key(start)]
-                        else:
-                            raw=sources.read_rows(view.source_connection('etf'),'etf',code,start=start,end=end)
-                            line=view.daily_line('etf',code,raw,mode)
-                            for bar in bars:bar['thirty_week_ma']=line.get(bar['trade_date'])
-                            history=list(reversed([dict(r) for r in view.source_connection('etf').execute('SELECT '+','.join(BAR_FIELDS)+' FROM etf_daily WHERE etf_code=? AND trade_date<=? ORDER BY trade_date DESC LIMIT 600',(code,end))]))
-                            for r in history:r['change_pct']=r['close']/r['prev_close']-1 if r.get('prev_close') and r.get('close') is not None else None
-                            metrics={r['trade_date']:r for r in enrich(history,'daily',calendar)}
-                            for bar in bars:
-                                row=metrics.get(bar['trade_date'],{})
-                                for key in ('change_pct','change_reason','volume_ratio','volume_ratio_reason'):bar[key]=row.get(key)
-                        result['weekly_strength']=view.signal('etf',code,end,mode)
+                        from guanlan_domain.observer_math import continuous_adjust_bars,chart_rows
+                        from guanlan_domain.observer_math.signals import price_strength
+                        end=result.get('price_date') or bars[-1]['trade_date']
+                        history=self.bars.history(code,end)
+                        for row in history:row['change_pct']=row['close']/row['prev_close']-1 if row.get('prev_close') and row.get('close') is not None else None
+                        adjusted=history if mode=='raw' else continuous_adjust_bars(history)[0]
+                        calculated=enrich(chart_rows(adjusted,params.get('period','daily'),calendar),params.get('period','daily'),calendar)
+                        result['chart_bars']=calculated[-params['limit']:]
+                        result['weekly_strength']=price_strength(adjusted,calendar)
+                        result['history_start']=history[0]['trade_date'] if history else None
+                        result['chart_calculation']='readonly_source_history'
                     else:
                         result['weekly_strength']=unavailable('暂无ETF行情')
                         result['chart_bars']=enrich(bars,params.get('period','daily'),calendar)

@@ -144,8 +144,11 @@ class Reader:
                 tags=[t for t in theme['tags'] if any(p[:len(t['path'])]==t['path'] for p in member['paths'])]
                 index[member['code']]['themes'].append({'id':theme['id'],'name':theme['name'],'revision':theme['revision'],'paths':member['paths'],'tags':tags})
             if codes:definitions['theme'].append({'id':theme['id'],'name':theme['name'],'revision':theme['revision'],'codes':sorted(set(codes))})
-        evidence,coverage=read_day(self.support,self.kph,day,[r for r in raw if r['ts_code'] in index])
-        for row in rows:row['name']=row['name'] or fallback.get(row['code']) or '名称待补齐';row['limit']=evidence[row['code']]
+        from .recent_limits import read as read_recent
+        recent,coverage=read_recent(self,day,list(index))
+        for row in rows:
+            row['name']=row['name'] or fallback.get(row['code']) or '名称待补齐'
+            row.update(recent.get(row['code'],{'limit':{'status':'unknown','label':'证据不足','sources':[]},'limit_sequence':{'label':'','days':[]}}))
         for axis,field,label in (('industry','boards','未分类'),('subindustry','subboards','未划入子板块'),('theme','themes','未录入题材')):
             missing=[r['code'] for r in rows if not r[field]]
             if missing:definitions[axis].append({'id':'unassigned:'+axis,'name':label,'codes':missing,'revision':catalog['revision']})
@@ -175,7 +178,7 @@ class Reader:
         if not isinstance(target,dict) or set(target)!={'kind','id'} or target['kind']!='stock' or not re.fullmatch(r'\d{6}\.(SH|SZ|BJ)',str(target['id'])):raise ValueError('股票目标无效')
         period=params.get('period','daily');mode=params.get('price_mode','adjusted')
         if period not in ('daily','weekly') or mode not in ('adjusted','raw'):raise ValueError('行情周期或口径无效')
-        start=year_before(day);warm=year_before(year_before(start));code=target['id']
+        start='1900-01-01';warm=start;code=target['id']
         with readonly(self.market) as c:
             event=c.execute('SELECT * FROM equity_daily_raw WHERE ts_code=? AND trade_date=?',(code,event_day)).fetchone()
             if not event:raise ValueError('当日股票行情不存在')
@@ -194,28 +197,12 @@ class Reader:
             from guanlan_data.repositories.observer_calendar import load as load_calendar
             calendar=load_calendar(self.market,connection=c)
             sessions=list(calendar.sessions(start,day))
-        history=price_history({'rows':raw},mode)
-        with SeriesReader({**sources.paths(),'stock':self.market,'support':self.support}) as series:
-            if period=='weekly':
-                weekly=series.weekly_bars('stock',code,warm,day,mode)
-                computed=apply_overlays(weekly,{r['trade_date']:r.get('thirty_week_ma') for r in weekly})
-            else:computed=apply_overlays(history,series.daily_line('stock',code,raw,mode))
-            weekly_signal=series.signal('stock',code,day,mode)
-            series_revision=series.revision()
-        from guanlan_domain.observer_math.chart_metrics import enrich
-        computed=enrich(computed,period,calendar)
-        points=[r for r in computed if r['trade_date']>=start]
+        from guanlan_data.repositories.observer_chart_history import stock_history
+        chart=stock_history(self.market,code,day,period,mode)
+        points=chart['bars'];events=chart['events'];start=chart['start'];weekly_signal=chart['signal'];series_revision=chart['revision']
         from guanlan_data.repositories.observer_collections.securities import identities
         identity=identities([code],self.market,self.business,self.support).get(code,{})
         meta={**meta,**identity}
-        events=[]
-        if period=='daily':
-            present={r['trade_date'] for r in points};listing=meta.get('list_date') or raw[0]['trade_date'];listing=listing if '-' in listing else f'{listing[:4]}-{listing[4:6]}-{listing[6:]}'
-            for d in sessions:
-                if d>=max(start,listing) and d not in present:
-                    points.append({'trade_date':d,'open':None,'high':None,'low':None,'close':None,'volume':None,'amount':None,'status':'missing'})
-                    events.append({'trade_date':d,'kind':'missing','label':'无日线，未推断停牌'})
-            points.sort(key=lambda r:r['trade_date'])
         evidence,_=read_day(self.support,self.kph,event_day,[event])
         latest_quote=next((r for r in reversed(raw) if r['trade_date']==day),None)
         latest_change=normalize(latest_quote)[0] if latest_quote else None

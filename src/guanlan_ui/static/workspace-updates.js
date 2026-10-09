@@ -3,7 +3,7 @@
 window.createObserverUpdates=({module,$,invoke,getTarget,toast,onChanged})=>{
  const {esc}=ObserverFormat,board=module!=='etf';let jobTimer=null,lastBatch=null,disposed=false,polling=false;
 const dateToday=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai'}).format(new Date());
-async function submit(mode){try{let params={mode,end_date:dateToday()};if(mode==='etf_backfill'){if(board)throw Error('请先进入ETF观察并选择补采对象');params={mode,end_date:$('backfillEnd').value,start_date:$('backfillStart').value,target:getTarget()};}const j=await invoke('updates.submit',params,'global');toast('已进入统一更新：'+j.message);await pollJobs();}catch(e){toast(e.message);}}
+async function submit(mode){try{let params={mode,end_date:dateToday()};if(mode==='etf_backfill'){params={mode,end_date:$('backfillEnd').value,start_date:$('backfillStart').value,target:module==='home'?{kind:'etf',id:$('backfillCode').value.trim()}:getTarget()};}const j=await invoke('updates.submit',params,'global');toast('已进入统一更新：'+j.message);await pollJobs();}catch(e){toast(e.message);}}
 const names={calendar:'股市日历续藏',market:'股票行情与因子',names:'新增证券名称补齐',etf:'ETF数据',industry:'行业、子板块与题材指数',limits:'涨跌停限制价',series:'本地周线与30周指标'},statuses={queued:'等待',running:'运行中',submitting:'提交中',succeeded:'完成',failed:'失败',partial:'部分完成',skipped:'跳过',cancelled:'已取消',interrupted:'已中断',submission_unknown:'回执待核对'};
 async function pollJobs(){if(disposed||polling)return;polling=true;clearTimeout(jobTimer);try{const data=await invoke('updates.list',{},'global'),items=data.items||[],running=items.find(j=>['queued','running'].includes(j.status));$('openUpdates').textContent=running?'正在更新…':items[0]?.status==='partial'?'更新部分完成':'更新状态';
  $('updateDates').textContent=Object.entries(data.dates||{}).map(([k,v])=>({market:'股票源',etf:'ETF行情',industry:'集合结果',limits:'限制价证据',series:'30周指标'}[k]||k)+': '+(v||'不可用')).join(' · ');$('updateJobs').innerHTML=items.map(j=>`<article class="job"><h3>${esc(statuses[j.status]||j.status)} · ${esc(j.params.mode==='all'?'更新全部':j.params.mode==='names'?'补齐证券名称':j.params.mode==='indicators'?'重算本地指标':['industry','collection'].includes(j.params.mode)?'本地重算':j.params.mode==='limits'?'限制价补齐':'ETF更新')} · ${esc(j.params.end_date)}</h3><p>${esc(j.message)} · 批次 ${esc(j.job_id)}</p>${j.stages.map(s=>`<div class="job-stage">${esc(names[s.id])}：${esc(statuses[s.status]||s.status)} ${esc(s.message||'')}${s.central_job_id?' · 任务 '+esc(s.central_job_id):s.status==='submission_unknown'?' · 待核对请求 '+esc(s.request_id):''}</div>`).join('')}${['failed','partial','interrupted','cancelled'].includes(j.status)?`<button data-retry="${j.job_id}">继续未完成阶段</button>`:''}${['queued','running'].includes(j.status)?`<button data-cancel="${j.job_id}">取消后续阶段</button>`:''}</article>`).join('')||'<p>暂无统一更新记录。现有行情可以直接浏览。</p>';
@@ -13,9 +13,21 @@ async function pollJobs(){if(disposed||polling)return;polling=true;clearTimeout(
  }catch(e){$('updateJobs').textContent='更新状态读取失败：'+e.message;}
  polling=false;if(!disposed)jobTimer=setTimeout(pollJobs,document.hidden?30000:10000);
 }
-$('openUpdates').onclick=()=>{$('updatesDialog').showModal();pollJobs();};$('closeUpdates').onclick=()=>$('updatesDialog').close();$('updateAll').onclick=()=>submit('all');$('updateAllDialog').onclick=()=>submit('all');$('rebuildIndustry').onclick=()=>submit('industry');$('updateEtf').onclick=()=>submit('etf');$('backfillEtf').onclick=()=>submit('etf_backfill');$('backfillStart').value='2025-10-01';$('backfillEnd').value=dateToday();$('backfillEtf').disabled=board;
+$('openUpdates').onclick=()=>{$('updatesDialog').showModal();pollJobs();};$('closeUpdates').onclick=()=>$('updatesDialog').close();if($('updateAll'))$('updateAll').onclick=()=>submit('all');$('updateAllDialog').onclick=()=>submit('all');$('rebuildIndustry').onclick=()=>submit('industry');$('updateEtf').onclick=()=>submit('etf');$('backfillEtf').onclick=()=>submit('etf_backfill');$('backfillStart').value='2025-10-01';$('backfillEnd').value=dateToday();$('backfillEtf').disabled=module!=='home';
  const localButton=document.createElement('button');localButton.id='rebuildIndicators';localButton.type='button';localButton.textContent='重算本地指标';localButton.title='只计算本地周线和30周状态，不采集行情';localButton.onclick=()=>submit('indicators');$('rebuildIndustry').after(localButton);
  const namesButton=document.createElement('button');namesButton.id='fillSecurityNames';namesButton.type='button';namesButton.textContent='补齐证券名称';namesButton.title='复用企业名录，只采集尚缺失的证券基础资料';namesButton.onclick=()=>submit('names');localButton.after(namesButton);
+ if(module!=='home'){
+  $('updatesDialog').querySelector('.update-actions')?.remove();$('updatesDialog').querySelector('details')?.remove();
+  const link=document.createElement('a');link.href='/home/';link.textContent='前往首页补齐数据';$('updateDates').before(link);
+ }else{
+  const menu=$('completeDataMenu'),arrow=$('completeDataArrow');
+  const closeMenu=()=>{menu.hidden=true;arrow.setAttribute('aria-expanded','false');};
+  $('completeData').onclick=()=>submit('all');
+  arrow.onclick=()=>{menu.hidden=!menu.hidden;arrow.setAttribute('aria-expanded',String(!menu.hidden));if(!menu.hidden)menu.querySelector('button')?.focus();};
+  menu.querySelectorAll('[data-complete]').forEach(b=>b.onclick=()=>{closeMenu();submit(b.dataset.complete);});
+  document.addEventListener('click',e=>{if(!e.target.closest('.data-complete'))closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){closeMenu();arrow.focus();}});
+ }
  return {start:pollJobs,poll:pollJobs,destroy(){disposed=true;clearTimeout(jobTimer);}};
 };
 })();

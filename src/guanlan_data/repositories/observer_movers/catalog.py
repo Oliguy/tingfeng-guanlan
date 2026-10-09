@@ -2,6 +2,7 @@
 import threading
 from collections import OrderedDict
 from pathlib import Path
+from guanlan_data.repositories.industry_index.config import classification_root
 from guanlan_data.repositories.industry_index.inputs import digest; from guanlan_data.repositories.industry_index.inputs import readonly
 
 def stamp(path):
@@ -15,8 +16,9 @@ class Catalog:
 
     def read(self,codes=None):
         from guanlan_data.repositories.observer_collections.catalog import industry_collections
-        working=self.business.parent/'classification_working/current.json'
-        root_working=self.business.parent/'classification_working/root_current.json'
+        root=classification_root(self.business)
+        working=root/'current.json'
+        root_working=root/'root_current.json'
         def current_stamp():
             extra=()
             if working.exists():

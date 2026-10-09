@@ -7,13 +7,14 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from guanlan_data.repositories.industry_index.config import classification_root
 
 SCHEMA = 'industry.focus.working.v1'
 ROOT_NAMES = {'光通信', '半导体', '存储', '电子元件与消费电子', '化工与新材料'}
 
 
 def query(db, directory):
-    root = Path(db).resolve().parent / 'classification_working'
+    root = classification_root(db)
     pointer = root / 'current.json'
     if not pointer.exists():
         return None

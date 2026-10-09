@@ -36,7 +36,8 @@ class ReaderTests(unittest.TestCase):
         self.assertEqual(data['stats']['total'],3)
         self.assertEqual(sum(len(g['codes']) for g in data['groups']['industry']),4)
         self.assertEqual(data['rows'][0]['themes'][0]['tags'][0]['theme_id'],'T1')
-        self.assertTrue(all(r['limit']['status']=='unknown' for r in data['rows']))
+        self.assertTrue(all(r['limit']['status']=='unrestricted' for r in data['rows']))
+        self.assertTrue(all(not r['limit_sequence']['label'] for r in data['rows']))
         self.assertFalse(self.support.exists())
 
     def test_history_neighbors_date_pagination(self):

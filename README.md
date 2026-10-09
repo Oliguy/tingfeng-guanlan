@@ -89,4 +89,4 @@ python -m pip install '.[test]'
 python -m pytest -q
 ```
 
-可选的 `.[analysis]` 提供分析缓存依赖；常规浏览和训练不要求它。发布前运行 [公开内容检查](tools/check_public.py)。当前测试范围与实际限制见 [审计记录](docs/audit.md)。
+可选的 `.[analysis]` 提供分析缓存依赖；常规浏览和训练不要求它。发布前运行 [公开内容检查](tools/check_public.py)。当前测试范围与实际限制见 [审计记录](docs/audit.md)。分类资料引用、近期几天几板、首页数据补齐及完整历史K线见 [行情显示说明](docs/observer-repairs.md)。

@@ -97,9 +97,10 @@ def query(module,params):
         if not m:raise ValueError('股票不属于此版本集合')
         from guanlan_data.repositories.observer_collections.member_signals import signal; from guanlan_data.repositories.observer_collections.member_signals import configured
         ref=raw['quotes'][m['code']]['ref']
-        with Reader(configured(ref)) as view:
-            points,payload,events=quotes.bars(ref,header['start_date'],period,mode,header['display_dates'],series_reader=view)
-            weekly_signal=signal(ref,header['actual_end'],mode=mode,reader=view)
+        payload=quotes.load(ref)  # Keep the frozen member/source validation.
+        from guanlan_data.repositories.observer_chart_history import stock_history
+        chart=stock_history(ref['market_path'],m['code'],header['actual_end'],period,mode)
+        points=chart['bars'];events=chart['events'];weekly_signal=chart['signal']
         from guanlan_data.repositories.observer_collections.securities import identities
         identity=identities([m['code']],config.input_paths()[1],config.input_paths()[0],config.support_path()).get(m['code'],{})
         m={**m,'name':identity.get('name') or m.get('name')}
@@ -107,7 +108,7 @@ def query(module,params):
                 'weekly_strength':weekly_signal,
                 'parent':{'id':id,'kind':'group','name':g['name']},'price_date':payload['summary']['date'],
                 'stock':{**m,'quote':payload['summary'],'events':events,'metadata':payload['metadata']},
-                'units':{'price':'元/股','volume':'股','amount':'元'},'header':header}
+                'units':{'price':'元/股','volume':'股','amount':'元'},'header':{**header,'chart_start_date':chart['start']},'chart_source_revision':chart['revision']}
     if mode!='adjusted':raise ValueError('集合仅有连续等权指数口径')
     read_fence=_cache_fence(raw)
     products=member_products(g['members'],config.input_paths()[0],publication_id=pub)

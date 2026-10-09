@@ -26,8 +26,8 @@ def validate_observer_params(params: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(kind, str) or kind not in {'group', 'etf'} or (not isinstance(identifier, str)) or (not re.fullmatch(pattern, identifier)):
             raise OperationError('invalid_params', 'invalid target')
         limit = params.get('limit', 1000)
-        if isinstance(limit, bool) or not isinstance(limit, int) or (not 20 <= limit <= 1000):
-            raise OperationError('invalid_params', 'limit must be an integer from 20 to 1000')
+        if isinstance(limit, bool) or not isinstance(limit, int) or (not 20 <= limit <= 10000):
+            raise OperationError('invalid_params', 'limit must be an integer from 20 to 10000')
         if not isinstance(params.get('price_mode', 'adjusted'), str) or params.get('price_mode', 'adjusted') not in {'adjusted', 'raw'}:
             raise OperationError('invalid_params', 'invalid price_mode')
         if not isinstance(params.get('period', 'daily'), str) or params.get('period', 'daily') not in {'daily', 'weekly'}:

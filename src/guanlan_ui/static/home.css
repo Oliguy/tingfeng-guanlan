@@ -190,3 +190,5 @@
 .app-content .home-header{min-height:64px}
 .app-content .home-header h1{font-size:20px}
 @media(max-width:760px){.app-content .home-header{padding:14px 0}}
+
+.app-content .data-complete{position:relative}.app-content .data-complete-buttons{display:flex;gap:0}.app-content .data-complete-buttons button{border-radius:0}.app-content .data-complete-buttons button:first-child{border-radius:7px 0 0 7px}.app-content .data-complete-buttons button:last-child{border-radius:0 7px 7px 0;border-left:1px solid #ffffff55;min-width:32px;padding-inline:8px}.app-content .data-complete-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:35;width:216px;padding:6px;border:1px solid var(--line,#d7dde2);border-radius:8px;background:var(--surface,#fff);box-shadow:0 8px 24px #16293b22}.app-content .data-complete-menu:not([hidden]){display:grid;gap:3px}.app-content .data-complete-menu button{text-align:left;width:100%;padding:8px 10px;border:0}.app-content .data-complete-menu button:hover{background:var(--soft,#edf2f5)}

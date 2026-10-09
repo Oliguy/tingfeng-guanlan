@@ -7,7 +7,7 @@ const S={loadState:"empty",data:null,leader:null,leaderError:null,display:null,f
 let dayRequest=null,leaderRequest=null,stockRequest=null,daySequence=0,stockSequence=0,dateCursor=null,dateLoading=false,returnPosition=null,toastTimer=null;
 addEventListener('observer:preferences',()=>{if(!S.detail){const p=preferences.read();S.barPeriod=p.defaultPeriod;S.barMode=p.defaultPrice;S.barRange=p.defaultRange;}});
 const initialQuery=new URLSearchParams(location.search);if(['up','down'].includes(initialQuery.get('direction'))){S.filter.direction=initialQuery.get('direction');$('moveDirection').value=S.filter.direction;}
-if(PAGE==='list'){document.querySelectorAll('#moversSort [data-score-only]').forEach(o=>o.remove());$('completeScoresWrap').hidden=true;$('scoreFloorWrap').hidden=true;$('leaderRules').hidden=true;$('leaderStatusLine').hidden=true;$('supplementLimits').hidden=false;}else{$('moversPageTitle').textContent='龙头评分';document.querySelector('.movers-heading>span').textContent='近5个交易日异动 · 日线评分';$('supplementLimits').hidden=true;try{const saved=localStorage.getItem(FLOOR_KEY);if(saved!==null&&Number.isInteger(Number(saved))&&Number(saved)>=0&&Number(saved)<=130)S.filter.floor=Number(saved);}catch{}$('scoreFloor').value=S.filter.floor;}
+if(PAGE==='list'){document.querySelectorAll('#moversSort [data-score-only]').forEach(o=>o.remove());$('completeScoresWrap').hidden=true;$('scoreFloorWrap').hidden=true;$('leaderRules').hidden=true;$('leaderStatusLine').hidden=true;}else{$('moversPageTitle').textContent='龙头评分';document.querySelector('.movers-heading>span').textContent='近5个交易日异动 · 日线评分';try{const saved=localStorage.getItem(FLOOR_KEY);if(saved!==null&&Number.isInteger(Number(saved))&&Number(saved)>=0&&Number(saved)<=130)S.filter.floor=Number(saved);}catch{}$('scoreFloor').value=S.filter.floor;}
 $('moversTab'+(PAGE==='leader'?'Leader':'List')).setAttribute('aria-current','page');
 try{const saved=localStorage.getItem(PAGE==='leader'?'guanlan_movers_leader_sort':'guanlan_movers_sort');if([...$('moversSort').options].some(o=>o.value===saved)){S.filter.sort=saved;}}catch{}
 $('moversSort').value=S.filter.sort;
@@ -51,14 +51,14 @@ function syncHistory(){if(!S.data)return;const q=new URLSearchParams({date:S.dat
 function dateStatus(){if(!S.data)return;const d=S.data,quality=d.quality;$('moversReadStatus').classList.remove('error');$('moversReadStatus').textContent=`${d.date===d.latest_collected_trade_date?'最新采集日':'已采集历史日'} ${d.date} · 最新采集 ${d.latest_collected_trade_date} · 本地 ${quality.source_rows} 只日线`+(quality.unavailable_change?` · ${quality.unavailable_change}只涨跌幅不可判定`:'')+(quality.invalid_ohlc?` · ${quality.invalid_ohlc}只OHLC异常`:'')+(quality.quarantined_records?` · ${quality.quarantined_records}条源隔离记录`:'')+(quality.limit_coverage?.status==='unavailable'?' · '+quality.limit_coverage.message:'')+' · 只读浏览';}
 async function loadDay(day){
  const sequence=++daySequence;dayRequest?.abort();leaderRequest?.abort();stockRequest?.abort();++stockSequence;dayRequest=new AbortController();
- $('supplementLimits').disabled=true;
+
  $('moversReadStatus').textContent='读取 '+(day||'最新采集日')+'，保留上次成功画面…';$('moversReadStatus').classList.remove('error');
  try{const data=await transport.query({view:'day',...(day?{date:day}:{})},{signal:dayRequest.signal});if(sequence!==daySequence)return;
   saveView();S.data=data;S.leader=null;S.leaderError=null;S.detail=null;S.stockCode=null;S.loadState="empty";chart.drawCurrentBars();$('moversStockPane').hidden=true;$('moversListPane').hidden=false;$('leaderDetails').hidden=true;returnPosition=null;renderList();$('moversScroll').scrollTop=0;setDateOption(data.date);
   $('previousDate').disabled=!data.previous_date;$('nextDate').disabled=!data.next_date;dateStatus();$('connection').textContent='本地';
   syncHistory();ObserverHomeNavigation.remember({module:'movers',date:data.date,direction:S.filter.direction,name:(PAGE==='leader'?'龙头评分':'异动')+' · '+data.date+(S.filter.direction==='up'?' · 大幅上涨':S.filter.direction==='down'?' · 大幅下跌':'')});if(PAGE==='leader')loadLeader(data,sequence);
  }catch(e){if(e.name==='AbortError'||sequence!==daySequence)return;$('moversReadStatus').textContent='读取失败：'+e.message+(S.data?' · 当前仍显示 '+S.data.date:'');$('moversReadStatus').classList.add('error');toast(e.message);if(S.data)setDateOption(S.data.date);}
- finally{if(sequence===daySequence)$('supplementLimits').disabled=!S.data;}
+ finally{}
 }
 async function openStock(code){
  if(!S.data)return;const row=displayData().rows.find(r=>r.code===code);if(!row)return;
@@ -76,7 +76,7 @@ async function openStock(code){
 }
 function back(){saveView();stockRequest?.abort();++stockSequence;S.stockCode=null;S.detail=null;S.loadState='empty';chart.drawCurrentBars();$('moversStockPane').hidden=true;$('moversListPane').hidden=false;renderList();if(returnPosition){$('moversScroll').scrollTop=returnPosition.scroll;const button=$('moversGroups').querySelector(`[data-stock="${returnPosition.code}"]`);button?.focus({preventScroll:true});}}
 function syncChartButtons(){document.querySelectorAll('[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===S.barPeriod));document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===S.barMode));document.querySelectorAll('[data-range]').forEach(b=>{if(b.dataset.range!=='all')b.textContent=b.dataset.range+(S.barPeriod==='weekly'?'周':'日');});}
-$('previousDate').onclick=()=>{if(S.data?.previous_date)loadDay(S.data.previous_date);};$('nextDate').onclick=()=>{if(S.data?.next_date)loadDay(S.data.next_date);};$('latestDate').onclick=()=>loadDay();$('eventDate').onchange=()=>loadDay($('eventDate').value);$('moreDates').onclick=()=>loadDates(true);$('refreshMovers').onclick=()=>loadDay(S.data?.date);
+$('previousDate').onclick=()=>{if(S.data?.previous_date)loadDay(S.data.previous_date);};$('nextDate').onclick=()=>{if(S.data?.next_date)loadDay(S.data.next_date);};$('latestDate').onclick=()=>loadDay();$('eventDate').onchange=()=>loadDay($('eventDate').value);$('moreDates').onclick=()=>loadDates(true);
 document.querySelectorAll('[data-axis]').forEach(b=>b.onclick=()=>{S.filter.axis=b.dataset.axis==='theme'?'theme':$('boardLevel').value;renderList();$('moversScroll').scrollTop=0;});
 $('boardLevel').onchange=()=>{S.filter.axis=$('boardLevel').value;renderList();$('moversScroll').scrollTop=0;};
 $('completeScores').onchange=()=>{S.filter.complete_only=$('completeScores').checked;renderList();$('moversScroll').scrollTop=0;};
@@ -92,7 +92,6 @@ document.querySelectorAll('[data-range]').forEach(b=>b.onclick=()=>chart.setChar
 $('panOlder').onclick=()=>chart.panChart(1);$('panNewer').onclick=()=>chart.panChart(-1);$('resetView').onclick=()=>chart.resetChart();$('timelineRange').oninput=()=>chart.core.setView({pan:Number($('timelineRange').max)-Number($('timelineRange').value)});$('zoomRange').oninput=()=>chart.setChartRange(Number($('zoomRange').value));
 addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('settingsPanel').hidden){settings.show(false);return;}if(event.target.closest('input,select,textarea,dialog,#settingsPanel')||event.target.isContentEditable)return;const direction=preferences.direction(event);if(!direction||!S.stockCode)return;const order=S.display?.order||[];if(!order.length)return;event.preventDefault();openStock(order[(order.indexOf(S.stockCode)+direction+order.length)%order.length]);});
 const updates=createObserverUpdates({module:'movers',$,invoke:transport.invoke,getTarget:()=>({kind:'stock',id:S.stockCode}),toast,onChanged:async()=>{const old=S.data,latest=await transport.query({view:'dates',limit:1});if(old?.date===old?.latest_collected_trade_date)await loadDay();else if(old){await loadDay(old.date);if(latest.latest_collected_trade_date!==old.latest_collected_trade_date)toast('已有新采集日 '+latest.latest_collected_trade_date+'，已保留历史日期');}await loadDates();}});
-$('supplementLimits').onclick=async()=>{if(!S.data)return;try{const job=await transport.invoke('updates.submit',{mode:'limits',end_date:S.data.date},'global');toast('限制价补齐：'+job.message);updates.poll();}catch(e){toast(e.message);}};
 addEventListener('pagehide',()=>{dayRequest?.abort();leaderRequest?.abort();stockRequest?.abort();chart.destroy();settings.destroy();updates.destroy();clearTimeout(toastTimer);});
 loadDay(new URLSearchParams(location.search).get('date')||undefined).then(()=>loadDates());updates.start();
 })();

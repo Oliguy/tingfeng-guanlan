@@ -307,6 +307,11 @@ class EtfObserverQueries:
             for row in week_rows:
                 week_by_group[row['group_id']].append(row)
         leaders = {r['group_id']: dict(r) for r in conn.execute('WITH latest AS (\n            SELECT g.group_id,substr(COALESCE(MAX(i.trade_date),(SELECT MAX(trade_date) FROM etf_daily)),1,7) month\n            FROM industry_groups g LEFT JOIN industry_daily i ON i.group_id=g.group_id GROUP BY g.group_id)\n            SELECT l.*,m.fund_name,m.tracking_index_name FROM monthly_leaders l\n            JOIN latest x ON x.group_id=l.group_id AND x.month=l.leader_month\n            JOIN etf_master m ON m.etf_code=l.etf_code WHERE l.is_current=1')}
+        from guanlan_data.repositories.guanlan_backend.market_etf.observer_read_repository import mapped_quote_leader
+        for row in groups:
+            if row['group_id'] not in leaders:
+                candidate=mapped_quote_leader(conn,row['group_id'])
+                if candidate:leaders[row['group_id']]=candidate
         focus = [dict(r) for r in conn.execute('SELECT f.*,m.fund_name,m.tracking_index_name FROM etf_focus_watchlist f\n            JOIN etf_master m ON m.etf_code=f.etf_code WHERE f.is_active=1 ORDER BY f.display_order,f.etf_code')]
         codes = sorted({r['etf_code'] for r in leaders.values()} | {r['etf_code'] for r in focus})
         bars = defaultdict(list)
@@ -336,6 +341,8 @@ class EtfObserverQueries:
             if row.get('trade_date'):
                 week = week_by_group[row['group_id']]
                 row['weekly_strength']['weekly_volume'] = sum((r['aggregate_volume'] for r in week)) if week and all((r.get('aggregate_volume') is not None for r in week)) else None
+            row['selection_kind']=leader.get('selection_kind','monthly_leader') if code else None
+            row['selection_reason']=leader.get('selection_reason')
             row['volume_scope'] = 'industry_members'
         for row in focus:
             row.update(target={'kind': 'etf', 'id': row['etf_code']}, group_type='focus')

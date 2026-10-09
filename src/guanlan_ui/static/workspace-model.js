@@ -11,14 +11,14 @@ function evidenceLabel(value){try{const r=JSON.parse(value||'{}');return r.lexic
 function summary(raw,module){
  const board=module!=='etf';
  const convert=(r,focus)=>({target:focus?{kind:'etf',id:r.etf_code}:{kind:'group',id:r.group_id},name:focus?r.focus_name||r.fund_name:r.group_name,
-  change:focus?r.daily_return:r.group_return,signal:r.weekly_strength||{},section:focus?'focus':'groups',
+  change:focus?r.daily_return:board?r.group_return:r.daily_return,signal:r.weekly_strength||{},section:focus?'focus':'groups',
   parentId:r.parent_id,publicationId:r.publication_id,referenced:Object.hasOwn(r,'publication_id'),collectionKind:r.kind,pending:r.pending,failure:r.failure,
-  caption:board?(r.stats?.current_listed_members??0)+'只成分'+(r.quality==='working_unverified'?' · 工作分类':r.quality==='classified_sample'?' · 已分类样本':'')+(r.failure?' · 应用失败':r.pending?' · 待本地应用':''):r.leader_name||r.fund_name||r.group_id||r.etf_code,
+  caption:board?(r.stats?.current_listed_members??0)+'只成分'+(r.quality==='working_unverified'?' · 工作分类':r.quality==='classified_sample'?' · 已分类样本':'')+(r.failure?' · 应用失败':r.pending?' · 待本地应用':''):(r.leader_name||r.fund_name||r.group_id||r.etf_code)+(r.selection_kind==='mapped_quote'?' · 映射ETF':''),
   search:[r.group_name,r.focus_name,r.fund_name,r.group_id,r.etf_code,r.leader_name].filter(Boolean).join(' ').toLowerCase()});
  return {schema:'reader_display_v1',module,revision:raw.data_revision,asOf:raw.as_of,objects:[...(raw.focus_items||[]).map(r=>convert(r,true)),...(raw.items||[]).map(r=>convert(r,false))]};
 }
 function request(module,target,view,summary,parent){
- const params={view:'detail',target,period:view.barPeriod,price_mode:view.barMode,limit:1000};
+ const params={view:'detail',target,period:view.barPeriod,price_mode:view.barMode,limit:10000};
  if(module!=='etf'){const row=summary.objects.find(r=>r.target.id===(target.kind==='stock'?parent:target.id));if(row?.referenced){if(row.publicationId)params.publication_id=row.publicationId;if(target.kind==='stock')params.parent_id=parent;}else{params.run_id=summary.revision;if(target.kind==='stock')params.industry_id=parent;}}
  return params;
 }
@@ -30,7 +30,7 @@ function detail(raw){
   title:g?(g.kind==='subindustry'&&g.path?.length>1?g.path[0]+' · '+g.name:g.name):stock?stock.name||stock.code:d.leader?.fund_name||d.group?.group_name||d.target.id,
   code:g?(g.kind==='theme'?'':g.id):stock?stock.code:d.leader?.etf_code||d.target.id,
   parentLabel:g?(g.kind==='theme'?'题材库':g.path?.join(' / ')||'30行业'):stock?d.parent.name:d.group?.group_name||'ETF',
-  meta:g?`${g.members.length}只成分 · 每日等权${g.quality==='working_unverified'?' · 工作分类（未核实）':g.quality==='classified_sample'?' · 已分类样本':''}${d.pending?' · 新修订待应用，当前为已发布版本':''}`:stock?({D:'已退市 · 分类成员',P:'暂停上市 · 分类成员'}[stock.metadata?.list_status]||'行业成分股'):d.leader?.tracking_index_name||'',
+  meta:g?`${g.members.length}只成分 · 每日等权${g.quality==='working_unverified'?' · 工作分类（未核实）':g.quality==='classified_sample'?' · 已分类样本':''}${d.pending?' · 新修订待应用，当前为已发布版本':''}`:stock?({D:'已退市 · 分类成员',P:'暂停上市 · 分类成员'}[stock.metadata?.list_status]||'行业成分股'):(d.leader?.tracking_index_name||'')+(d.leader?.selection_kind==='mapped_quote'?' · 当前映射ETF行情':''),
   date:d.price_date||bar.trade_date||'暂无',signal:d.weekly_strength,unitLabel:g?'指数点':stock?'元/股 · 股':'元/份',
   status:g?(d.failure?'应用失败：'+d.failure:`${g.stats.valid_sessions}/${g.stats.sessions}个交易日连续`):stock?`${stock.events.filter(e=>e.kind==='suspended').length}个停牌日 · ${stock.events.filter(e=>e.kind==='missing').length}个缺失日`+(bar.thirty_week_ma==null?' · 30周历史不足':''):d.calendar_dependency_status==='UNAVAILABLE'?'交易日历不可用；按已存行情展示':quality(last.quality_status),
   chart:{bars:d.chart_bars||[],units:d.units||{price:g?'指数点':'元/份',volume:g?'股/只':'份',amount:'元'},period:d.period,priceMode:d.price_mode},
@@ -53,7 +53,7 @@ function detail(raw){
  }else{
   result.metrics=[['聚合成交额',money(last.aggregate_amount)],['20日相对成交额',price(last.relative_amount_20d)+'倍'],['行业/ETF涨跌',pct(last.group_return)],['估算日净申购',money(last.estimated_net_subscription)],['成员覆盖',pct(last.coverage_ratio)],['质量状态',quality(last.quality_status)]];
   result.metricNotes=[text('日净申购须有合格的相邻交易日份额和匹配净值；暂无可用值时显示“—”。'),details('披露区间份额变化',(d.share_change_intervals||[]).length?d.share_change_intervals.slice(-12).reverse().map(r=>text(`${r.period_start} — ${r.period_end}：份额变化 ${money(r.share_change)}，期末净值估值 ${money(r.end_value_estimate)}；${r.status||''}。不等于单日净申购。`)):[text('暂无可核验披露区间')])];
-  result.info=[text(d.group?.group_type==='focus'?'当前重点ETF单独观察，不参与行业聚合。':'整段图表使用本月代表ETF；优先从60周历史的成员中按上月成交额评选。'),text(`行情 ${d.price_date} · 日历 ${({UNAVAILABLE:'来源不可用',STALE:'来源已变化，待重算',UNVERIFIED:'待核验',CURRENT:'当前可用'})[d.calendar_dependency_status]||d.calendar_dependency_status||'—'} · 质量 ${quality(last.quality_status)}`),text('质量依据：'+((last.reason_codes||[]).map(c=>reasonLabels[c]||c).join('、')||'无补充原因')),details('月度代表ETF历史',[table(['月份','ETF','上月成交额'],(d.leader_history||[]).map(r=>[r.leader_month,`${r.fund_name} ${r.etf_code}`,money(r.monthly_amount)]))]),details('价格折算事件',(d.adjustment_events||[]).length?d.adjustment_events.map(e=>text(`${e.trade_date} ×${price(e.factor)}`)):[text('无折算事件')])];
+  result.info=[text(d.group?.group_type==='focus'?'当前重点ETF单独观察，不参与行业聚合。':d.leader?.selection_kind==='mapped_quote'?'当月正式代表ETF缺失；展示当前有效映射中有行情的ETF，按报价日期和当日成交额选择。此图为该ETF行情。':'整段图表使用本月代表ETF；优先从60周历史的成员中按上月成交额评选。'),text(`行情 ${d.price_date} · 日历 ${({UNAVAILABLE:'来源不可用',STALE:'来源已变化，待重算',UNVERIFIED:'待核验',CURRENT:'当前可用'})[d.calendar_dependency_status]||d.calendar_dependency_status||'—'} · 质量 ${quality(last.quality_status)}`),text('质量依据：'+((last.reason_codes||[]).map(c=>reasonLabels[c]||c).join('、')||'无补充原因')),details('月度代表ETF历史',[table(['月份','ETF','上月成交额'],(d.leader_history||[]).map(r=>[r.leader_month,`${r.fund_name} ${r.etf_code}`,money(r.monthly_amount)]))]),details('价格折算事件',(d.adjustment_events||[]).length?d.adjustment_events.map(e=>text(`${e.trade_date} ×${price(e.factor)}`)):[text('无折算事件')])];
   const holdings=d.holdings||[];
   result.members={title:(d.members||[]).length+'只ETF成员 · 持仓按定期披露',headers:['ETF代码','名称','归类依据'],rows:(d.members||[]).map(m=>({search:(m.etf_code+' '+m.fund_name).toLowerCase(),cells:[m.etf_code,m.fund_name,evidenceLabel(m.evidence_json)]})),extra:[{type:'heading',value:'前十大持仓 '+(holdings[0]?.report_date||'')},link(holdings[0]?.source_url,'查看披露原文'),{type:'table',headers:['股票','代码','权重','日涨跌'],rows:holdings.slice(0,10).map(m=>({search:(m.stock_code+' '+m.stock_name).toLowerCase(),cells:[m.stock_name,m.stock_code,m.weight_pct==null?'—':Number(m.weight_pct).toFixed(2)+'%',pct(m.daily_return)]}))}]};
  }
