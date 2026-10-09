@@ -11,12 +11,12 @@ def roles():
     c=current();market=c.path('market_root');collection=c.path('collection_root')
     return {'equity':market/'market/equity_daily_raw.sqlite','etf':market/'market_etf/industry_etf_observer.sqlite',
         'status':market/'market_facts/equity_status_daily.sqlite','business':c.path('business_db'),
-        'industry':c.path('industry_db'),'support':c.path('support_db'),
+        'support':c.path('support_db'),
         'catalog':collection/'catalog.sqlite','results':collection/'results.sqlite',
         'kph':market/'market_events/kph_limit_up.sqlite'}
 
 def inspect():
-    report={'schema_version':'guanlan.doctor.v1','contract_version':1,'roles':{},'source_write':False}
+    report={'schema_version':'guanlan.doctor.v1','contract_version':2,'roles':{},'source_write':False}
     for role,path in roles().items():
         spec=contract()['roles'][role];item={'path':str(path),'status':'compatible','issues':[],'required':spec['required']}
         report['roles'][role]=item

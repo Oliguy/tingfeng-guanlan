@@ -17,7 +17,7 @@ class Configuration:
 
     @property
     def protected(self):
-        return [self.paths[k] for k in ('market_root','business_db','industry_db','support_db','calendar_root','analysis_root')]
+        return [self.paths[k] for k in ('market_root','business_db','support_db','calendar_root','analysis_root')]
 
 _current = None
 
@@ -28,14 +28,15 @@ def load(path):
         raise ValueError('配置版本必须为 guanlan.config.v1')
     unknown = set(raw)-{'schema_version','paths','server','provider','connection','demo'}
     if unknown: raise ValueError('未知配置字段：'+', '.join(sorted(unknown)))
-    configured=raw.get('paths',{})
+    configured=dict(raw.get('paths',{}))
+    configured.pop('industry_db',None)  # retired v1 role; never resolved or opened
     def resolve(value):
         p=Path(value).expanduser()
         return (p if p.is_absolute() else file.parent/p).resolve()
     market=resolve(configured.get('market_root','data'))
     state=resolve(configured.get('state_root','state'))
     defaults={'market_root':market,'state_root':state,'business_db':market/'classification/business.sqlite',
-        'industry_db':market/'industry/industry.sqlite','support_db':market/'industry/support.sqlite',
+        'support_db':market/'industry/support.sqlite',
         'collection_root':state/'collections','calendar_root':market/'observer_calendar',
         'analysis_root':market/'analysis/stable_basis_v1','training_db':state/'training.sqlite',
         'jobs_root':state/'jobs'}
@@ -47,7 +48,7 @@ def load(path):
     # Writable databases are never an alias of a source database.
     for role in ('training_db','jobs_root'):
         if not paths[role].is_relative_to(state): raise ValueError(role+' 必须位于 state_root')
-    for role in ('business_db','industry_db','support_db','calendar_root','analysis_root'):
+    for role in ('business_db','support_db','calendar_root','analysis_root'):
         if paths[role].is_relative_to(state):raise ValueError(role+' 必须与可写状态分开')
     return Configuration(file,raw,paths)
 

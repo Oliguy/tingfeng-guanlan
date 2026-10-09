@@ -1,4 +1,4 @@
-# 数据库标准 v1
+# 数据库标准（合同修订2）
 
 数据文件在代码、虚拟环境和安装包之外。配置版本为 `guanlan.config.v1`；消费合同为 `guanlan.database-contract.v1`，完整表/字段/类型/主键元数据位于 `src/guanlan_data/contracts/databases.v1.json`。
 
@@ -8,13 +8,14 @@
 | etf | `market_root/market_etf/industry_etf_observer.sqlite` | ETF、分组、代表基金、日线与质量状态 |
 | status | `market_root/market_facts/equity_status_daily.sqlite` | 训练所需逐日 ST、退市状态与历史名称 |
 | business | `business_db` | 分类、规则、档案与必要证据关联 |
-| industry | `industry_db` | 既有行业指数结果 |
 | support | `support_db` | 限价证据、名称与补充回执 |
 | catalog | `collection_root/catalog.sqlite` | 题材版本、命令幂等回执 |
 | results | `collection_root/results.sqlite` | 已发布行业/题材、共享周线、指标与来源引用 |
 | kph | `market_root/market_events/kph_limit_up.sqlite` | 可选收盘涨停证据 |
 
 `training_db` 默认 `state_root/training.sqlite`，保存训练会话、操作、请求编号与笔记。`jobs_root` 默认 `state_root/jobs`；外部中央任务仍以提供者的原任务编号为准。`calendar_root`、`analysis_root` 可以显式指定，均视为只读输入。
+
+2.1起旧industry角色退役，合同修订为2；配置和JSON文件的schema名称保持v1。旧配置中的 `industry_db` 仅忽略以便升级，不读取该库。行业统一读取results。职责整合、四指数生产与ETF映射详见[数据库整合与指数采集](数据库整合与指数采集.md)。
 
 ## 权限与初始化
 

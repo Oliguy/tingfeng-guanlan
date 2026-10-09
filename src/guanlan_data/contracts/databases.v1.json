@@ -1,6 +1,6 @@
 {
   "schema_version": "guanlan.database-contract.v1",
-  "contract_version": 1,
+  "contract_version": 2,
   "description": "现有 SQLite 消费合同；由元数据形成，不含数据库行、SQL转储或文件路径。只读检查，不迁移。",
   "roles": {
     "equity": {
@@ -3673,103 +3673,6 @@
           {
             "name": "original_json",
             "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          }
-        ]
-      }
-    },
-    "industry": {
-      "required": false,
-      "tables": {
-        "industry_meta": [
-          {
-            "name": "key",
-            "type": "TEXT",
-            "notnull": 0,
-            "pk": 1
-          },
-          {
-            "name": "value",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          }
-        ],
-        "industry_runs": [
-          {
-            "name": "run_id",
-            "type": "TEXT",
-            "notnull": 0,
-            "pk": 1
-          },
-          {
-            "name": "header_json",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          },
-          {
-            "name": "content_hash",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          },
-          {
-            "name": "created_at",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          }
-        ],
-        "industry_groups": [
-          {
-            "name": "run_id",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 1
-          },
-          {
-            "name": "industry",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 2
-          },
-          {
-            "name": "summary_json",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          },
-          {
-            "name": "detail_json",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          }
-        ],
-        "industry_member_prices": [
-          {
-            "name": "run_id",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 1
-          },
-          {
-            "name": "code",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 2
-          },
-          {
-            "name": "summary_json",
-            "type": "TEXT",
-            "notnull": 1,
-            "pk": 0
-          },
-          {
-            "name": "payload",
-            "type": "BLOB",
             "notnull": 1,
             "pk": 0
           }

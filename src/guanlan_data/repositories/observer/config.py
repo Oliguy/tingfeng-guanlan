@@ -1,7 +1,7 @@
 """Compatibility facade for feature readers; all configuration belongs to data."""
 from pathlib import Path
 from guanlan_data.config import current
-from guanlan_data.repositories.industry_index.config import operator_project; from guanlan_data.repositories.industry_index.config import result_path
+from guanlan_data.repositories.industry_index.config import operator_project
 HERE=Path(__file__).parent
 
 def settings():
